@@ -1,0 +1,105 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: sans-serif;
+    font-size: 1rem;
+    color: #444;
+}
+
+#root {
+    max-width: 450px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+form {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.todoInput {
+    border: 2px solid lightblue;
+    color: gray;
+}
+
+.todoInput:focus {
+    box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
+    border: 2px solid lightblue;
+    outline: none;
+}
+
+[type='text'],
+button {
+    display: inline-block;
+    padding: .5rem 1rem;
+    font-size: inherit;
+    border-radius: .3rem;
+    border: 2px solid lightblue;
+}
+
+button {
+    cursor: pointer;
+    background-color: lightblue;
+    color: white;
+    margin: 0 .5rem;
+}
+
+button:hover {
+    box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
+}
+
+button:focus {
+    background-color: rgb(146, 209, 230);
+}
+
+h1 {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    color: #222;
+    
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+    margin-bottom: 1rem;
+    background-color: aliceblue;
+    border-radius: .3rem;
+    border: 2px solid lightblue;
+}
+
+[type='text'] {
+    width: 100%;
+}
+
+li span,
+.s span {
+    display: inline-block;
+    padding: .5rem;
+    width: 40rem;
+    border-radius: .3rem;
+}
+
+li span:hover {
+    background: white;
+    border: 2px solid lightblue;
+    border-radius: .3rem;
+}
+
+li span:focus {
+    background: white;
+    border: 2px solid lightblue;
+    border-radius: .3rem;
+    outline: none;
+    box-shadow: 5px 5px 5px rgba(2, 2, 2, .25);
+}

@@ -51,16 +51,16 @@ class View{
         this.todoList = this.createElement('ul', 'todo-list')
 
         this.title = this.createElement('h1')
-        this.title.textContent = 'Todos'
+        this.title.textContent = 'Next Actions'
 
         this.form = this.createElement('form')
 
-        this.todoTextInput = this.createElement('input')
+        this.todoTextInput = this.createElement('input','todoInput')
         this.todoTextInput.type = 'text'
-        this.todoTextInput.placeHolder = 'Add a todo!'
+        this.todoTextInput.placeholder = 'What to do...'
 
         this.submitTodoButton = this.createElement('button')
-        this.submitTodoButton.textContent = 'Submit'
+        this.submitTodoButton.textContent = 'Add'
         
         this.form.append(this.todoTextInput, this.submitTodoButton )
         this.app.append(this.title, this.form, this.todoList)
@@ -95,23 +95,24 @@ class View{
         if(todos.length === 0){
             console.log(todos)
             const todoListPlaceholder = this.createElement('p')
-            todoListPlaceholder.textContent = 'Nothing left to do!'
+            todoListPlaceholder.textContent = 'Nothing left to do! Go to projects for more actions.'
             this.todoList.append(todoListPlaceholder)
         } else {
             todos.forEach(todo => {
-                const todoListItem = this.createElement('li')
+                const todoListItem = this.createElement('li', 'todoListItem')
                 todoListItem.id = todo.id
+                // todoListItem.classList.add('li');
 
                 const completeCheckbox = this.createElement('input')
                 completeCheckbox.type = 'checkbox'
                 completeCheckbox.checked = todo.complete
                 todoListItem.append(completeCheckbox)
 
-                const todoListItemSpan = this.createElement('span', 'editable')
-                todoListItemSpan.contentEditable = true
+                const todoListItemSpan = this.createElement('span', 'editable');
+                todoListItemSpan.contentEditable = true;
 
                     if(todo.complete === true){
-                        const strikeThrough = this.createElement('s')
+                        const strikeThrough = this.createElement('s', 's')
                         strikeThrough.textContent = todo.text
                         todoListItem.append(strikeThrough)
                     }   else {
