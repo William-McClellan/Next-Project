@@ -76,6 +76,7 @@ li {
     background-color: aliceblue;
     border-radius: .3rem;
     border: 2px solid lightblue;
+    width: 26rem;
 }
 
 [type='text'] {
@@ -83,10 +84,10 @@ li {
 }
 
 li span,
-.s span {
+.s {
     display: inline-block;
     padding: .5rem;
-    width: 40rem;
+    width: 20rem;
     border-radius: .3rem;
 }
 
