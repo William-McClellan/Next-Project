@@ -1,6 +1,7 @@
 class Model{
     constructor(){
-        this.todos = JSON.parse(localStorage.getItem("todos")) || []
+        this.todos = JSON.parse(localStorage.getItem("todos")) || [];
+        this.projects = JSON.parse(localStorage.getItem("projects")) || [];
     }
 
     bindTodosChanged(callback){
@@ -52,7 +53,9 @@ class View{
 
         this.title = this.createElement('h1')
         this.title.textContent = 'Next Actions'
-
+        // add projects div
+        this.projDiv = this.createElement('div')
+        
         this.form = this.createElement('form')
 
         this.todoTextInput = this.createElement('input','todoInput')
@@ -131,6 +134,7 @@ class View{
        console.log(todos)
     }
 
+    
     get _todoText(){
         const _todoText = this.todoTextInput.value
         return _todoText
@@ -196,14 +200,21 @@ class Controller{
         this.view = view
 
         this.model.bindTodosChanged(this.todosChanged)
+        this.model.bindProjectsChanged(this.projectsChanged)
 
         this.view.bindAddTodo(this.handleAddTodo)
         this.view.bindDeleteTodo(this.handleDeleteTodo)
         this.view.bindToggleComplete(this.handleToggleComplete)
         this.view.bindEditTodo(this.handleEditTodo)
+        
+
 
         this.todosChanged(this.model.todos)
+        this.projectsChanged(this.model.projects)
+    }
 
+    projectsChanged = projects =>{
+        this.view.displayProj(projects)
     }
 
     todosChanged = todos =>{
