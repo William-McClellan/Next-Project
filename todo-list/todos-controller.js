@@ -1,32 +1,22 @@
-export class Controller{
+export class TodosController{
     constructor(model, view){
-        this.model = model
-        this.view = view
-
-        this.model.bindTodosChanged(this.todosChanged)
-
-        this.view.bindAddTodo(this.handleAddTodo)
-        this.view.bindDeleteTodo(this.handleDeleteTodo)
-        this.view.bindToggleComplete(this.handleToggleComplete)
-        this.view.bindEditTodo(this.handleEditTodo)
-
-        this.todosChanged(this.model.todos)
-
+        this.model = model;
+        this.view = view;
     }
 
-    todosChanged = todos =>{
-        this.view.displayTodoList(todos)
+    todosChanged = (todos) =>{
+        view.displayTodoList(todos)
     }
 
-    handleAddTodo = todoText =>{
+    handleAddTodo = (todoText) =>{
         this.model.addTodo(todoText)
     }
 
-    handleDeleteTodo = id =>{
+    handleDeleteTodo = (id) =>{
         this.model.deleteTodo(id)
     }
 
-    handleToggleComplete = id =>{
+    handleToggleComplete = (id) =>{
         this.model.toggleComplete(id)
     }
 

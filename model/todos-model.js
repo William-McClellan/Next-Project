@@ -1,8 +1,15 @@
-export class Model{
+
+export class TodosModel{
     constructor(){
         this.todos = JSON.parse(localStorage.getItem("todos")) || [];
+        this.subscribers = [];
+    }
+    addSubscriber(callback){
+        this.subscribers.push(callback);
+    }
 
-        this.projects = JSON.parse(localStorage.getItem('projects')) || [];
+    removeSubscriber(callback){
+        this.subscribers = this.subscribers.filter((subscriber) => subscriber !== callback);
     }
 
     bindTodosChanged(callback){
@@ -44,4 +51,19 @@ export class Model{
 
         this._commit(this.todos)
     }
+
+    notify(){
+        this.subscribers.forEach((callback) => {
+            callback(this.todos);
+        })
+    }
+    
+    getTodos(){
+        const todos = this.todos;
+        return todos;
+    }
 }
+
+const instance = new TodosModel();
+
+export default instance;

@@ -1,40 +1,33 @@
-export class View{
-    constructor(){
-        this.app = this.getElement('#root')       
+import { getElement, createElement} from "../utils.js";
+    
+export class TodosView{
+    constructor(model){
+        this.model = model;
+        this.app = getElement('#root');       
         
-        this.todoList = this.createElement('ul', 'todo-list')
+        this.todoList = createElement('ul', 'todo-list');
 
-        this.title = this.createElement('h1')
-        this.title.textContent = 'Next Actions'
+        this.title = createElement('h1');
+        this.title.textContent = 'Next Actions';
 
-        this.form = this.createElement('form')
+        this.form = createElement('form');
 
-        this.todoTextInput = this.createElement('input','todoInput')
-        this.todoTextInput.type = 'text'
-        this.todoTextInput.placeholder = 'What to do...'
+        this.todoTextInput = createElement('input','todoInput');
+        this.todoTextInput.type = 'text';
+        this.todoTextInput.placeholder = 'What to do...';
 
-        this.submitTodoButton = this.createElement('button')
-        this.submitTodoButton.textContent = 'Add'
+        this.submitTodoButton = createElement('button');
+        this.submitTodoButton.textContent = 'Add';
         
-        this.form.append(this.todoTextInput, this.submitTodoButton )
-        this.app.append(this.title, this.form, this.todoList)
+        this.form.append(this.todoTextInput, this.submitTodoButton );
+        this.app.append(this.title, this.form, this.todoList);
 
-        this._initEditTextListener()
-        this._editText = ''
+        this._initEditTextListener();
+        this._editText = '';
+
+        console.log('Form constructreeeeeeed');
         }
 
-
-    getElement(selector){
-        const element = document.querySelector(selector)
-        return element
-    }
-
-    createElement(tag, className){
-        const element = document.createElement(tag)
-
-        if(className) element.classList.add(className)
-        return element
-    }
 
     resetInput(){
         this.todoTextInput.value = ''
@@ -48,25 +41,25 @@ export class View{
         }
         if(todos.length === 0){
             console.log(todos)
-            const todoListPlaceholder = this.createElement('p')
+            const todoListPlaceholder = createElement('p')
             todoListPlaceholder.textContent = 'Nothing left to do! Go to projects for more actions.'
             this.todoList.append(todoListPlaceholder)
         } else {
             todos.forEach(todo => {
-                const todoListItem = this.createElement('li', 'todoListItem')
+                const todoListItem = createElement('li', 'todoListItem')
                 todoListItem.id = todo.id
                 // todoListItem.classList.add('li');
 
-                const completeCheckbox = this.createElement('input')
+                const completeCheckbox = createElement('input')
                 completeCheckbox.type = 'checkbox'
                 completeCheckbox.checked = todo.complete
                 todoListItem.append(completeCheckbox)
 
-                const todoListItemSpan = this.createElement('span', 'editable');
+                const todoListItemSpan = createElement('span', 'editable');
                 todoListItemSpan.contentEditable = true;
 
                     if(todo.complete === true){
-                        const strikeThrough = this.createElement('s', 's')
+                        const strikeThrough = createElement('s', 's')
                         strikeThrough.textContent = todo.text
                         todoListItem.append(strikeThrough)
                     }   else {
@@ -74,7 +67,7 @@ export class View{
                         todoListItem.append(todoListItemSpan)
                     }
 
-                const deleteButton = this.createElement('button', 'Delete')
+                const deleteButton = createElement('button', 'Delete')
                 deleteButton.textContent = 'Delete'
 
                 todoListItem.append(deleteButton)
@@ -138,3 +131,4 @@ export class View{
         })
     }
 }
+
