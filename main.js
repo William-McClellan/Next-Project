@@ -11,22 +11,34 @@ import {ProjectsModel} from './model/projects-model.js';
 import {ProjectsController} from './projects/projects-controller.js';
 import {ProjectsView} from './projects/projects-view.js';
 
+// todos instances
 const todosModel = new TodosModel();
 const todosView = new TodosView(todosModel);
 const todosController = new TodosController(todosModel,todosView);
-
-// const projectsModel = new ProjectsModel();
-// const projectsView = new ProjectsView(projectsModel);
-// const projectsController = new ProjectsController(projectsModel,projectsView);
-
 
 todosView.bindAddTodo(todosController.handleAddTodo);
 todosView.bindDeleteTodo(todosController.handleDeleteTodo);
 todosView.bindToggleComplete(todosController.handleToggleComplete);
 todosView.bindEditTodo(todosController.handleEditTodo);
 
-subscribeToModel(todosModel, todosView, (model)  => {
-    return model.getTodos();
+// projects instances
+const projectsModel = new ProjectsModel();
+const projectsView = new ProjectsView(projectsModel);
+const projectsController = new ProjectsController(projectsModel,projectsView);
+
+
+projectsView.bindAddProject(projectsController.handleAddProject);
+projectsView.bindDeleteProject(projectsController.handleDeleteProject);
+projectsView.bindToggleComplete(projectsController.handleToggleComplete);
+projectsView.bindEditProject(projectsController.handleEditProject);
+
+
+subscribeToModel(todosModel, todosView, ()  => {
+    return todosModel.getTodos();
+});
+
+subscribeToModel(projectsModel, projectsView, ()  => {
+    return projectsModel.getTodos();
 });
 
 const initialTodos = todosModel.getTodos();
