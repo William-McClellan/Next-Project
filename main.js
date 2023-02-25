@@ -15,19 +15,31 @@ const todosModel = new TodosModel();
 const todosView = new TodosView(todosModel);
 const todosController = new TodosController(todosModel,todosView);
 
-// const projectsModel = new ProjectsModel();
-// const projectsView = new ProjectsView(projectsModel);
-// const projectsController = new ProjectsController(projectsModel,projectsView);
+const projectsModel = new ProjectsModel();
+const projectsView = new ProjectsView(projectsModel);
+const projectsController = new ProjectsController(projectsModel,projectsView);
 
-
+// Todos handler binding
 todosView.bindAddTodo(todosController.handleAddTodo);
 todosView.bindDeleteTodo(todosController.handleDeleteTodo);
 todosView.bindToggleComplete(todosController.handleToggleComplete);
 todosView.bindEditTodo(todosController.handleEditTodo);
 
-subscribeToModel(todosModel, todosView, (model)  => {
+// Projects handler binding
+projectsView.bindAddProject(projectsController.handleAddProject);
+projectsView.bindDeleteTodo(projectsController.handleDeleteTodo);
+projectsView.bindToggleComplete(projectsController.handleToggleComplete);
+projectsView.bindEditProject(projectsController.handleEditProject);
+
+subscribeToTodosModel(todosModel, todosView, (model)  => {
     return model.getTodos();
 });
+
+subscribeToProjectsModel(projectsModel, projectsView, (model)  => {
+    return model.getProjects();
+});
+
+
 
 const initialTodos = todosModel.getTodos();
 todosView.displayTodoList(initialTodos);
