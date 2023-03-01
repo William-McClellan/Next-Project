@@ -1,14 +1,14 @@
-export class ProjectsController{
+export class ProjController{
         constructor(model, view){
         this.model = model
         this.view = view
         }
 
-        projectsChanged = (projects) =>{
-        view.displayProjectList(projects)
+        projChanged = (proj) =>{
+        view.displayProjectList(proj)
         }
 
-        handleProject = (projectText) =>{
+        handleAddProject = (projectText) =>{
         this.model.addProject(projectText)
         }
 
@@ -19,6 +19,10 @@ export class ProjectsController{
         handleEditProject = (id, editText) => {
         this.model.editProject(id, editText)
         }
+
+        handleToggleComplete = (id) =>{
+        this.model.toggleComplete(id)
+    }
 
         // handleSelectProject = (id) => {
         // this.model.selectProject(id)

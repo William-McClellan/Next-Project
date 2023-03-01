@@ -1,11 +1,11 @@
-export class TodosController{
+export class TodoController{
     constructor(model, view){
         this.model = model;
         this.view = view;
     }
 
-    todosChanged = (todos) =>{
-        view.displayTodoList(todos)
+    todoChanged = (todo) =>{
+        view.displayTodoList(todo)
     }
 
     handleAddTodo = (todoText) =>{

@@ -1,10 +1,13 @@
 import { getElement, createElement} from "../utils.js";
     
-export class TodosView{
+export class TodoView{
     constructor(model){
         this.model = model;
         this.app = getElement('#root');       
         
+        this.todoDiv = createElement('div','todoDiv')
+
+
         this.todoList = createElement('ul', 'todo-list');
 
         this.title = createElement('h1');
@@ -20,32 +23,34 @@ export class TodosView{
         this.submitTodoButton.textContent = 'Add';
         
         this.form.append(this.todoTextInput, this.submitTodoButton );
-        this.app.append(this.title, this.form, this.todoList);
+        this.todoDiv.append( this.title, this.form, this.todoList);
+        this.app.append(this.todoDiv);
 
         this._initEditTextListener();
         this._editText = '';
 
         console.log('Form constructreeeeeeed');
-        }
+        
+    }
 
 
     resetInput(){
-        this.todoTextInput.value = ''
+        this.todoTextInput.value = '';
     }
 
 
 
-    displayTodoList(todos){
+    displayTodoList(todo){
         while(this.todoList.firstChild){
             this.todoList.removeChild(this.todoList.firstChild)
         }
-        if(todos.length === 0){
-            console.log(todos)
+        if(todo.length === 0){
+            console.log(todo)
             const todoListPlaceholder = createElement('p')
-            todoListPlaceholder.textContent = 'Nothing left to do! Go to projects for more actions.'
+            todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
             this.todoList.append(todoListPlaceholder)
         } else {
-            todos.forEach(todo => {
+            todo.forEach(todo => {
                 const todoListItem = createElement('li', 'todoListItem')
                 todoListItem.id = todo.id
                 // todoListItem.classList.add('li');
@@ -75,7 +80,7 @@ export class TodosView{
                 this.todoList.append(todoListItem)
             })
        }
-       console.log(todos)
+       console.log(todo)
     }
 
     get _todoText(){

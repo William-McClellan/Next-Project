@@ -1,56 +1,61 @@
 // Utils
 import { subscribeToModel } from './utils.js';
 
-// Todos
-import {TodosModel} from './model/todos-model.js';
-import {TodosController} from './todo-list/todos-controller.js';
-import {TodosView} from './todo-list/todos-view.js';
+// todo
+import {TodoModel} from './model/todo-model.js';
+import {TodoController} from './todo-list/todo-controller.js';
+import {TodoView} from './todo-list/todo-view.js';
 
-// Projects
-import {ProjectsModel} from './model/projects-model.js';
-import {ProjectsController} from './projects/projects-controller.js';
-import {ProjectsView} from './projects/projects-view.js';
+// proj
+import {ProjModel} from './model/proj-model.js';
+import {ProjController} from './proj/proj-controller.js';
+import {ProjView} from './proj/proj-view.js';
+// proj instances
+const projModel = new ProjModel();
+const projView = new ProjView(projModel);
+const projController = new ProjController(projModel,projView);
 
-// todos instances
-const todosModel = new TodosModel();
-const todosView = new TodosView(todosModel);
-const todosController = new TodosController(todosModel,todosView);
+// todo instances
+const todoModel = new TodoModel();
+const todoView = new TodoView(todoModel);
+const todoController = new TodoController(todoModel,todoView);
 
-todosView.bindAddTodo(todosController.handleAddTodo);
-todosView.bindDeleteTodo(todosController.handleDeleteTodo);
-todosView.bindToggleComplete(todosController.handleToggleComplete);
-todosView.bindEditTodo(todosController.handleEditTodo);
-
-// projects instances
-const projectsModel = new ProjectsModel();
-const projectsView = new ProjectsView(projectsModel);
-const projectsController = new ProjectsController(projectsModel,projectsView);
-
-
-projectsView.bindAddProject(projectsController.handleAddProject);
-projectsView.bindDeleteProject(projectsController.handleDeleteProject);
-projectsView.bindToggleComplete(projectsController.handleToggleComplete);
-projectsView.bindEditProject(projectsController.handleEditProject);
+todoView.bindAddTodo(todoController.handleAddTodo);
+todoView.bindDeleteTodo(todoController.handleDeleteTodo);
+todoView.bindToggleComplete(todoController.handleToggleComplete);
+todoView.bindEditTodo(todoController.handleEditTodo);
 
 
-subscribeToModel(todosModel, todosView, ()  => {
-    return todosModel.getTodos();
+
+projView.bindAddProject(projController.handleAddProject);
+projView.bindDeleteProject(projController.handleDeleteProject);
+projView.bindToggleComplete(projController.handleToggleComplete);
+projView.bindEditProject(projController.handleEditProject);
+
+
+subscribeToModel(projModel, projView, ()  => {
+    return projModel.getproj();
 });
 
-subscribeToModel(projectsModel, projectsView, ()  => {
-    return projectsModel.getTodos();
+subscribeToModel(todoModel, todoView, ()  => {
+    return todoModel.gettodo();
 });
 
-subscribeToProjectsModel(projectsModel, projectsView, (model)  => {
-    return model.getProjects();
-});
 
-const initialTodos = todosModel.getTodos();
-todosView.displayTodoList(initialTodos);
+const initialproj = projModel.getproj();
+projView.displayprojList(initialproj);
 
-todosModel.bindTodosChanged(todos => {
-    todosView.displayTodoList(todos);
+const initialtodo = todoModel.gettodo();
+todoView.displayTodoList(initialtodo);
+
+projModel.bindprojChanged(proj => {
+    projView.displayprojList(proj);
 })
+
+todoModel.bindtodoChanged(todoList => {
+    todoView.displayTodoList(todoList);
+})
+
 
 
         
