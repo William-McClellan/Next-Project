@@ -41,6 +41,10 @@ subscribeToModel(projectsModel, projectsView, ()  => {
     return projectsModel.getTodos();
 });
 
+subscribeToProjectsModel(projectsModel, projectsView, (model)  => {
+    return model.getProjects();
+});
+
 const initialTodos = todosModel.getTodos();
 todosView.displayTodoList(initialTodos);
 
