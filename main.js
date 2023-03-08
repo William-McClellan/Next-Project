@@ -10,6 +10,7 @@ import {TodoView} from './todo-list/todo-view.js';
 import {ProjModel} from './model/proj-model.js';
 import {ProjController} from './proj/proj-controller.js';
 import {ProjView} from './proj/proj-view.js';
+
 // proj instances
 const projModel = new ProjModel();
 const projView = new ProjView(projModel);
@@ -24,8 +25,6 @@ todoView.bindAddTodo(todoController.handleAddTodo);
 todoView.bindDeleteTodo(todoController.handleDeleteTodo);
 todoView.bindToggleComplete(todoController.handleToggleComplete);
 todoView.bindEditTodo(todoController.handleEditTodo);
-
-
 
 projView.bindAddProject(projController.handleAddProject);
 projView.bindDeleteProject(projController.handleDeleteProject);
@@ -48,7 +47,7 @@ projView.displayprojList(initialproj);
 const initialtodo = todoModel.gettodo();
 todoView.displayTodoList(initialtodo);
 
-projModel.bindprojChanged(proj => {
+projModel.bindProjChanged(proj => {
     projView.displayprojList(proj);
 })
 

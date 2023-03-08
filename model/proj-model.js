@@ -18,7 +18,7 @@ export class ProjModel{
         })
     }
 
-    bindprojChanged(callback){
+    bindProjChanged(callback){
         this.projChanged = callback
     }
 
