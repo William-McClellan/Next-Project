@@ -33,6 +33,9 @@ export class ProjView{
         this._initEditTextListener();
         this._editText = '';
         this.newStepText = '';
+
+        this.dropDownDiv = createElement('div', 'dropdown-div');
+        this.dropDownDiv.display = 'none';
         
         console.log('proj Form constructreeeeeeed');
     }
@@ -49,7 +52,7 @@ export class ProjView{
         }
 
         projArr.forEach(proj => {
-            const projListItem = createElement('div', 'projListItem')
+            const projListItem = createElement('div', 'proj-list-item')
             projListItem.id = proj.id
             
             const completeCheckbox = createElement('input')
@@ -70,18 +73,18 @@ export class ProjView{
                     projListItem.append(projListItemSpan)
                 }
 
-            const deleteButton = createElement('button', 'Delete')
+            const deleteButton = createElement('button', 'proj-delete-button')
             deleteButton.textContent = 'Delete'
 
             projListItem.append(deleteButton)
-
-            const dropDownDiv = createElement('div', 'dropdown-div');
+            projListItem.append( this.dropDownDiv);
+            // const dropDownDiv = createElement('div', 'dropdown-div');
 
             const dropDownButton = createElement('button', 'dropdown-button');
             dropDownButton.textContent = 'Steps';
             projListItem.appendChild(dropDownButton);
 
-            this.projList.append(projListItem, dropDownDiv);
+            this.projList.append(projListItem);
 
             const displayStepList = (proj) => {        
                 const stepList = createElement('ol','step-list');
@@ -91,7 +94,7 @@ export class ProjView{
                 newStepInput.placeholder = 'small + precise = easy';
                 proj.newStepInput = newStepInput;
 
-                dropDownDiv.appendChild(newStepInput);
+                this.dropDownDiv.appendChild(newStepInput);
                 
                 if(proj.stepArr){
                     proj.stepArr.map((step) => {
@@ -103,7 +106,7 @@ export class ProjView{
                         
 
                         stepList.appendChild(stepItem);
-                        dropDownDiv.appendChild(stepList);
+                        this.dropDownDiv.appendChild(stepList);
                         console.log('if statement triggered');
                         })            
                     }
@@ -111,7 +114,7 @@ export class ProjView{
                     dropDownButton.addEventListener('click', event => {
                     if(event.target.className === 'dropdown-button'){
                         console.log('dropDownButton HIT')
-                        dropDownDiv.style.display = (dropDownDiv.style.display === 'block') ? 'none' : 'block';
+                        this.dropDownDiv.style.display = (this.dropDownDiv.style.display === 'block') ? 'none' : 'block';
                     }
                     })
                 }       
@@ -205,10 +208,12 @@ export class ProjView{
     }
 
     //make the event target the projList and then reference the input with 'new-step-input' ID and see if that works 
+
     bindAddStep(handler){
-        this.projList.addEventListener('submit', event => {
+        this.dropDownDiv.addEventListener('submit', event => {
             event.preventDefault();
-            if(event.target.className === 'newStepInput' && event.keyCode === 13 ){
+            console.log('bindAddStep triggered'); 
+            if(this._newStepText && this.dropDownDiv.style.display === 'block'){
                     handler(this._newStepText)
                     this.resetStepInput();
             }

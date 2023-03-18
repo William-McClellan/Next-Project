@@ -86,7 +86,7 @@ ul {
 }
 
 li,
-.projListItem {
+.proj-list-item {
     display: flex;
     align-items: center;
     padding: .5rem;

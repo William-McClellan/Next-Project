@@ -60,28 +60,21 @@ export class ProjModel{
     }
 
 // STEP METHODS
-    bindStepArrChanged(callback){
-        this.stepArrChanged = callback
-    }
-
-      _commitStep(stepArr){
-        this.stepArrChanged(stepArr)
-        localStorage.setItem("stepArr", JSON.stringify(stepArr))
-    }
-
+    
     addStep(stepText){
         const step = {
             text: stepText,
             id: new Date().getTime,
             complete: false
         }
-        this.projArr.stepArr.push(step);
-        this._commitStep(this.projArr.stepArr);
+        this.projArr.id.stepArr.push(step);
+        this._commit(this.projArr.stepArr);
+        console.log(this.projArr.stepArr);
     }
 
     deleteStep(id){
         this.projArr.stepArr = this.projArr.stepArr.filter(step => step.id !== id)
-        this._commitStep(this.projArr.stepArr)
+        this._commit(this.projArr.stepArr)
     }
 
     // toggleStepComplete(id){
@@ -89,7 +82,7 @@ export class ProjModel{
     //         step => step.id === id ? {text: step.text, id: step.id, complete: !step.complete} : step
     //         )
 
-    //     this._commitStep(this.projArr.stepArr)
+    //     this._commit(this.projArr.stepArr)
     // }
 
     editStep(id, editText){
@@ -97,7 +90,7 @@ export class ProjModel{
             step => step.id === id ? {text: editText, id: step.id, complete: step.complete} : step 
         )
 
-        this._commitStep(this.projArr.stepArr)
+        this._commit(this.projArr.stepArr)
     }
 
     getStepArr(){

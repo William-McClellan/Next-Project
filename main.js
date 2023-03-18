@@ -60,9 +60,6 @@ projModel.bindProjChanged(proj => {
     projView.displayProjList(proj);
 })
 
-projModel.bindStepArrChanged(proj => {
-    projView.displayStepList(proj);
-})
 
 todoModel.bindtodoChanged(todoList => {
     todoView.displayTodoList(todoList);
