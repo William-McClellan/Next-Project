@@ -3,10 +3,10 @@ export class ProjController{
         this.model = model
         this.view = view
         }
-
-        projChanged = (proj) =>{
-        view.displayProjectList(proj)
-        }
+// PROJ HANDLERS
+        // projChanged = (proj) =>{
+        // view.displayProjList(proj)
+        // }
 
         handleAddProject = (projectText) =>{
         this.model.addProject(projectText)
@@ -27,5 +27,28 @@ export class ProjController{
         // handleSelectProject = (id) => {
         // this.model.selectProject(id)
         // }
+
+        // STEP HANDLERS
+
+        //  stepChanged = (step) =>{
+        // view.displayStepList(step)
+        // }
+
+        handleAddStep = (stepText) =>{
+            this.model.addStep(stepText);
+        }
+
+        handleDeleteStep = (id) =>{
+            this.model.deleteStep(id);
+        }
+
+        // handleStepToggleComplete = () =>{
+
+        // }
+
+        handleEditStep = (id, stepText) =>{
+            this.model.editStep(id, stepText);
+        }
+
 
 }

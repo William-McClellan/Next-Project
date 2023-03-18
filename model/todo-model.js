@@ -2,22 +2,9 @@
 export class TodoModel{
     constructor(){
         this.todo = JSON.parse(localStorage.getItem("todo")) || [];
-        this.subscribers = [];
+    
     }
-    addSubscriber(callback){
-        this.subscribers.push(callback);
-    }
-
-    removeSubscriber(callback){
-        this.subscribers = this.subscribers.filter((subscriber) => subscriber !== callback);
-    }
-
-    notify(){
-        this.subscribers.forEach((callback) => {
-            callback(this.todo);
-        })
-    }
-
+   
     bindtodoChanged(callback){
         this.todoChanged = callback
     }

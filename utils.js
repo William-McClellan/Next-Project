@@ -1,9 +1,9 @@
-export function subscribeToModel(model,view,callback){
-    model.addSubscriber(() => {
-        const data = callback(model);
-        view.displayTodoList(data);
-    })
-}
+// export function subscribeToModel(model,view,callback){
+//     model.addSubscriber(() => {
+//         const data = callback(model);
+//         view.displayTodoList(data);
+//     })
+// }
 
 export function getElement(selector){
         const element = document.querySelector(selector)

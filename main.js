@@ -1,6 +1,3 @@
-// Utils
-import { subscribeToModel } from './utils.js';
-
 // todo
 import {TodoModel} from './model/todo-model.js';
 import {TodoController} from './todo-list/todo-controller.js';
@@ -31,24 +28,40 @@ projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
+projView.bindAddStep(projController.handleAddStep);
+projView.bindDeleteStep(projController.handleDeleteStep);
+// projView.bindStepToggleComplete(projController.handleStepToggleComplete);
+projView.bindEditStep(projController.handleEditStep);
 
-subscribeToModel(projModel, projView, ()  => {
-    return projModel.getproj();
-});
 
-subscribeToModel(todoModel, todoView, ()  => {
-    return todoModel.gettodo();
-});
+
+
+// subscribeToModel(projModel, projView, ()  => {
+//     return projModel.getproj();
+// });
+
+// subscribeToModel(todoModel, todoView, ()  => {
+//     return todoModel.gettodo();
+// });
 
 
 const initialproj = projModel.getproj();
-projView.displayprojList(initialproj);
+
+// const initialStep = projModel.getStepArr(); NOT NEEDED BECAUSE STEPLIST IS NOW DISPLAYED FROM DISPLAY
+
+projView.displayProjList(initialproj);
+
+// projView.displayStepList(initialStep);
 
 const initialtodo = todoModel.gettodo();
 todoView.displayTodoList(initialtodo);
 
 projModel.bindProjChanged(proj => {
-    projView.displayprojList(proj);
+    projView.displayProjList(proj);
+})
+
+projModel.bindStepArrChanged(proj => {
+    projView.displayStepList(proj);
 })
 
 todoModel.bindtodoChanged(todoList => {
