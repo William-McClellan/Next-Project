@@ -3,7 +3,6 @@ import { createElement } from "../utils.js";
 
 export class ProjView{
     constructor(){
-    
         // PROJECT CONSTRUCTION
         this.getElement = getElement;
         this.createElement = createElement;
@@ -15,6 +14,30 @@ export class ProjView{
         this.form = this.createElement('form');
 
         this.projList =  this.createElement('ul', 'proj-list');
+        this.projListItem = createElement('div', 'proj-list-item')
+
+        this.projItemCheckbox = createElement('input')
+        this.projItemCheckbox.type = 'checkbox'
+
+        this.dropDownDiv = createElement('div','dropdown-div');
+
+        this.projListItemSpan = createElement('span', 'editable');
+        this.projListItemSpan.contentEditable = true;
+
+        this.deleteProjButton = createElement('button', 'proj-delete-button');
+        this.deleteProjButton.textContent = 'Delete';
+
+        this.strikeThrough = createElement('s', 's')
+
+        this.stepItem = createElement('li', 'step-item');
+                    
+        this.dropDownButton = createElement('button', 'dropdown-button');
+        this.dropDownButton.textContent = 'Steps';
+
+        this.deleteStepButton = createElement('button', 'delete-step-button');
+        this.deleteStepButton.innerText = 'Delete';
+
+        this.stepList = createElement('ol','step-list');
 
         this.title = createElement('h1');
         this.title.textContent = 'Projects';
@@ -34,8 +57,8 @@ export class ProjView{
         this._editText = '';
         this.newStepText = '';
 
-        this.dropDownDiv = document.querySelector('.dropdown-div')
-        this.newStepInput =  createElement('input', 'new-step-input')
+        this.dropDownDiv = createElement('div','dropdown-div');
+        this.newStepInput =  createElement('input', 'new-step-input');
         this.stepForm = createElement('form', 'step-form');
 
         console.log('proj Form constructreeeeeeed');
@@ -53,78 +76,53 @@ export class ProjView{
         }
 
         projArr.forEach(proj => {
-            const projListItem = createElement('div', 'proj-list-item')
-            projListItem.id = proj.id
+            this.projListItem.id = proj.id
+            this.projItemCheckbox.checked = proj.complete; 
             
-            const completeCheckbox = createElement('input')
-            completeCheckbox.type = 'checkbox'
-            completeCheckbox.checked = proj.complete; 
-            projListItem.append(completeCheckbox)
+            this.projListItem.append(this.projItemCheckbox)
 
-            const dropDownDiv = createElement('div','dropdown-div');
+            if(proj.complete === true){
+                this.projListItem.append(this.strikeThrough)
+                this.strikeThrough.textContent = proj.text
+            }   else {
+                this.projListItemSpan.textContent = proj.text
+                this.projListItem.append(this.projListItemSpan)
+            }
+            this.projListItem.append(this.deleteProjButton)
+            this.projListItem.append( this.dropDownDiv);
 
-            const projListItemSpan = createElement('span', 'editable');
-            projListItemSpan.contentEditable = true;
+            this.projListItem.appendChild(this.dropDownButton);
 
-                if(proj.complete === true){
-                    const strikeThrough = createElement('s', 's')
-                    strikeThrough.textContent = proj.text
-                    projListItem.append(strikeThrough)
-                }   else {
-                    projListItemSpan.textContent = proj.text
-                    projListItem.append(projListItemSpan)
-                }
+            this.projList.append(this.projListItem, this.dropDownDiv);
 
-            const deleteButton = createElement('button', 'proj-delete-button')
-            deleteButton.textContent = 'Delete'
-
-            projListItem.append(deleteButton)
-            projListItem.append( dropDownDiv);
-            // const dropDownDiv = createElement('div', 'dropdown-div');
-
-            const dropDownButton = createElement('button', 'dropdown-button');
-            dropDownButton.textContent = 'Steps';
-            projListItem.appendChild(dropDownButton);
-
-            this.projList.append(projListItem, dropDownDiv);
-
-            const displayStepList = (proj) => {        
-                const stepList = createElement('ol','step-list');
-                
-                this.newStepInput.type = 'text';
-                this.newStepInput.placeholder = 'small + precise = easy';
-
-                this.stepForm.appendChild(this.newStepInput);
-                dropDownDiv.appendChild(this.stepForm);
-                
-                if(proj.stepArr){
-                    proj.stepArr.map((step) => {
-                        const stepItem = createElement('li', 'step-item');
-                        stepItem.textContent = step.textContent;
-                        
-                        const deleteStepButton = createElement('button', 'delete-step-button');
-                        deleteStepButton.innerText = 'Delete';
-                        
-
-                        stepList.appendChild(stepItem);
-                        dropDownDiv.appendChild(stepList);
-                        console.log('if statement triggered');
-                        })            
-                    }
-                    
-                    dropDownButton.addEventListener('click', event => {
-                    if(event.target.className === 'dropdown-button'){
-                        console.log('dropDownButton HIT')
-                        dropDownDiv.style.display = (dropDownDiv.style.display === 'block') ? 'none' : 'block';
-                    }
-                    })
-                }       
-                displayStepList(proj);
-
-
-                })
+            this.displayStepList(proj);
+            })
                 console.log(projArr);
     }
+
+    displayStepList(proj){        
+        this.newStepInput.type = 'text';
+        this.newStepInput.placeholder = 'small + precise = easy';
+
+        this.stepForm.appendChild(this.newStepInput);
+        this.dropDownDiv.appendChild(this.stepForm);
+        
+        if(proj.stepArr){
+            proj.stepArr.map((step) => {
+                this.stepItem.textContent = step.textContent;
+                
+                this.stepList.appendChild(this.stepItem);
+                this.dropDownDiv.appendChild(this.stepList);
+                })            
+            }
+            
+            this.dropDownButton.addEventListener('click', event => {
+            if(event.target.className === 'dropdown-button'){
+                this.dropDownDiv.style.display = (this.dropDownDiv.style.display === 'block') ? 'none' : 'block';
+            }
+            })
+        }       
+        
     get _newStepText(){
         const _newStepText = this.newStepInput.value;
         console.log('newStepText = ' + _newStepText);
@@ -187,19 +185,9 @@ export class ProjView{
 
     // PROJECT STEP METHODS
     
-    // display
-    
-
-
-
-    
     resetStepInput(){
         this.newStepInput.value = '';
     }
-
-
-    //STEP METHOD BINDING / LISTENERS
-
 
     _initStepEditTextListener(){
         this.stepList.addEventListener('input', event => {
@@ -208,8 +196,6 @@ export class ProjView{
             }
         })
     }
-
-    //make the event target the projList and then reference the input with 'new-step-input' ID and see if that works 
 
     bindAddStep(handler){
         if(this.stepForm){
@@ -235,11 +221,7 @@ export class ProjView{
         })
     }
 
-    // bindToggleComplete(handler){
-
-    // }
-
-bindEditStep(handler){
+    bindEditStep(handler){
         this.projList.addEventListener('focusout', event =>{
             if(this._editText){
                 const id = parseInt(event.target.parentElement.id)
@@ -248,7 +230,4 @@ bindEditStep(handler){
             }
         })
     }
-
-
-
 }
