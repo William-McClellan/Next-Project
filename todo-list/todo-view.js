@@ -45,7 +45,7 @@ export class TodoView{
             this.todoList.removeChild(this.todoList.firstChild)
         }
         if(todo.length === 0){
-            console.log(todo)
+            // console.log(todo)
             const todoListPlaceholder = createElement('p')
             todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
             this.todoList.append(todoListPlaceholder)
