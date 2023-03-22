@@ -67,7 +67,7 @@ export class ProjModel{
             id: new Date().getTime,
             complete: false
         }
-        this.projArr.id.stepArr.push(step);
+        this.projArr.stepArr.push(step);
         this._commit(this.projArr.stepArr);
         console.log(this.projArr.stepArr);
     }

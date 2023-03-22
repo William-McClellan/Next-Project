@@ -35,7 +35,8 @@ export class ProjView{
         this.newStepText = '';
 
         this.dropDownDiv = document.querySelector('.dropdown-div')
-        this.stepForm = document.querySelector('.step-form');
+        this.newStepInput =  createElement('input', 'new-step-input')
+        this.stepForm = createElement('form', 'step-form');
 
         console.log('proj Form constructreeeeeeed');
     }
@@ -89,15 +90,12 @@ export class ProjView{
 
             const displayStepList = (proj) => {        
                 const stepList = createElement('ol','step-list');
-                const stepForm = createElement('form','step-form')
                 
-                const newStepInput = createElement('input', 'new-step-input');
-                newStepInput.type = 'text';
-                newStepInput.placeholder = 'small + precise = easy';
-                proj.newStepInput = newStepInput;
+                this.newStepInput.type = 'text';
+                this.newStepInput.placeholder = 'small + precise = easy';
 
-                stepForm.appendChild(newStepInput);
-                dropDownDiv.appendChild(stepForm);
+                this.stepForm.appendChild(this.newStepInput);
+                dropDownDiv.appendChild(this.stepForm);
                 
                 if(proj.stepArr){
                     proj.stepArr.map((step) => {
@@ -128,7 +126,8 @@ export class ProjView{
                 console.log(projArr);
     }
     get _newStepText(){
-        const _newStepText = this.newStepText.value;
+        const _newStepText = this.newStepInput.value;
+        console.log('newStepText = ' + _newStepText);
         return _newStepText;
     }
 
@@ -195,7 +194,7 @@ export class ProjView{
 
     
     resetStepInput(){
-        this.stepTextInput.value = '';
+        this.newStepInput.value = '';
     }
 
 
@@ -214,13 +213,14 @@ export class ProjView{
 
     bindAddStep(handler){
         if(this.stepForm){
-            console.log('bindAddStep triggered'); 
             this.stepForm.addEventListener('submit', event => {
-                if(event.target.className === 'new-step-input'){
+                event.preventDefault();
+
+                if(this._newStepText){
+                    console.log('bindAddStep triggered'); 
                         handler(this._newStepText)
                         this.resetStepInput();
                 }
-                event.preventDefault();
             })
             
             }
