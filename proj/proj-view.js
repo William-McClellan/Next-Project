@@ -32,11 +32,10 @@ export class ProjView{
 
         this._initEditTextListener();
         this._editText = '';
-        this.newStepText = '';
+        this.newStepText = this._newStepText;
 
-        this.dropDownDiv = document.querySelector('.dropdown-div')
-        this.newStepInput =  createElement('input', 'new-step-input')
-        this.stepForm = createElement('form', 'step-form');
+        this.dropDownDiv = document.querySelector('.dropdown-div');
+
 
         console.log('proj Form constructreeeeeeed');
     }
@@ -47,7 +46,7 @@ export class ProjView{
         this.projTextInput.value = '';
     }
     
-    displayProjList(projArr){
+    displayProjList(projArr, addStepHandler){
         while(this.projList.firstChild){
             this.projList.removeChild(this.projList.firstChild)
         }
@@ -85,17 +84,42 @@ export class ProjView{
             const dropDownButton = createElement('button', 'dropdown-button');
             dropDownButton.textContent = 'Steps';
             projListItem.appendChild(dropDownButton);
-
-            this.projList.append(projListItem, dropDownDiv);
+            
+            this.projList.append(projListItem);
 
             const displayStepList = (proj) => {        
+                console.log('displayStepList triggered');
                 const stepList = createElement('ol','step-list');
-                
-                this.newStepInput.type = 'text';
-                this.newStepInput.placeholder = 'small + precise = easy';
 
-                this.stepForm.appendChild(this.newStepInput);
-                dropDownDiv.appendChild(this.stepForm);
+                const stepForm = createElement('form', 'step-form');
+
+                const newStepInput =  createElement('input', 'new-step-input')
+                newStepInput.type = 'text';
+                newStepInput.placeholder = 'small + precise = easy';
+
+
+                dropDownButton.addEventListener('click', event => {
+                if(event.target.className === 'dropdown-button'){
+                    stepForm.style.display = (stepForm.style.display === 'block') ? 'none' : 'block';
+                    console.log('dropDownButton HIT')
+                    }
+                    })
+                
+                stepForm.append(newStepInput);
+
+                this.projList.append(stepForm);
+
+                stepForm.addEventListener('submit', event => {
+                    event.preventDefault();
+                    const stepText = newStepInput.value;
+                    console.log(stepText);
+                    const projId = proj.id;
+
+                    addStepHandler(projArr, projId, stepText);
+                    this.resetStepInput();
+                    console.log('bindAddStep triggered'+ stepText); 
+                    }
+                )
                 
                 if(proj.stepArr){
                     proj.stepArr.map((step) => {
@@ -104,32 +128,26 @@ export class ProjView{
                         
                         const deleteStepButton = createElement('button', 'delete-step-button');
                         deleteStepButton.innerText = 'Delete';
-                        
 
-                        stepList.appendChild(stepItem);
-                        dropDownDiv.appendChild(stepList);
+                        stepList.append(stepItem);
+                        dropDownDiv.append(stepList);
                         console.log('if statement triggered');
                         })            
                     }
+
                     
-                    dropDownButton.addEventListener('click', event => {
-                    if(event.target.className === 'dropdown-button'){
-                        console.log('dropDownButton HIT')
-                        dropDownDiv.style.display = (dropDownDiv.style.display === 'block') ? 'none' : 'block';
-                    }
-                    })
-                }       
-                displayStepList(proj);
-
-
+                     
+                 }       
+            
+                 displayStepList(proj);
                 })
                 console.log(projArr);
     }
-    get _newStepText(){
-        const _newStepText = this.newStepInput.value;
-        console.log('newStepText = ' + _newStepText);
-        return _newStepText;
-    }
+    // get _newStepText(){
+    //     const _newStepText = newStepInput.value;
+    //     console.log('newStepText = ' + _newStepText);
+    //     return _newStepText;
+    // }
 
      get _projText(){
         const _projText = this.projTextInput.value
@@ -142,7 +160,7 @@ export class ProjView{
             event.preventDefault()
 
             if(this._projText){
-                handler(this._projText, this.newStepInput )
+                handler(this._projText)
                 this.resetInput()
             }
         })
@@ -150,7 +168,8 @@ export class ProjView{
 
     bindDeleteProject(handler){
         this.projList.addEventListener('click', event =>{
-            if(event.target.className === 'Delete'){
+            if(event.target.className === 'proj-delete-button'){
+                console.log('deleteproject')
                 const id = parseInt(event.target.parentElement.id)
                 handler(id)    
             }
@@ -187,19 +206,13 @@ export class ProjView{
 
     // PROJECT STEP METHODS
     
-    // display
-    
-
-
-
     
     resetStepInput(){
-        this.newStepInput.value = '';
+        newStepInput.value = '';
     }
 
 
     //STEP METHOD BINDING / LISTENERS
-
 
     _initStepEditTextListener(){
         this.stepList.addEventListener('input', event => {
@@ -209,22 +222,8 @@ export class ProjView{
         })
     }
 
-    //make the event target the projList and then reference the input with 'new-step-input' ID and see if that works 
 
-    bindAddStep(handler){
-        if(this.stepForm){
-            this.stepForm.addEventListener('submit', event => {
-                event.preventDefault();
-
-                if(this._newStepText){
-                    console.log('bindAddStep triggered'); 
-                        handler(this._newStepText)
-                        this.resetStepInput();
-                }
-            })
-            
-            }
-        }
+   
 
     bindDeleteStep(handler){
         this.projList.addEventListener('click', event =>{
@@ -234,10 +233,6 @@ export class ProjView{
             }
         })
     }
-
-    // bindToggleComplete(handler){
-
-    // }
 
 bindEditStep(handler){
         this.projList.addEventListener('focusout', event =>{
@@ -252,3 +247,4 @@ bindEditStep(handler){
 
 
 }
+

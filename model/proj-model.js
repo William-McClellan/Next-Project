@@ -1,14 +1,6 @@
 export class ProjModel{
     constructor(){
-        
         this.projArr = JSON.parse(localStorage.getItem("projArr")) || [];
-
-        this.projArr.text = '';
-        this.projArr.id = this.projArr.length;
-        this.projArr.complete =  false;
-        this.projArr.stepArr = [];
-        
-
     }
 
 // PROJECT METHODS
@@ -61,29 +53,30 @@ export class ProjModel{
 
 // STEP METHODS
     
-    addStep(stepText){
-        const step = {
+    setupAddStepHandler(projArr, projId, stepText, handler){
+        const projIndex = projArr.findIndex(proj => proj.id === projId);
+        
+        if(projIndex !== -1){
+            const step = {
             text: stepText,
             id: new Date().getTime,
             complete: false
         }
-        this.projArr.stepArr.push(step);
-        this._commit(this.projArr.stepArr);
-        console.log(this.projArr.stepArr);
+
+        projArr[projIndex].stepArr.push(step);
+        
+      handler(projArr)
+        this._commit(projArr);
+        console.log(projArr);
+        } else {
+            console.log('addstep: project not found');
+        }   
     }
 
     deleteStep(id){
         this.projArr.stepArr = this.projArr.stepArr.filter(step => step.id !== id)
         this._commit(this.projArr.stepArr)
     }
-
-    // toggleStepComplete(id){
-    //     this.projArr.stepArr = this.projArr.stepArr.map(
-    //         step => step.id === id ? {text: step.text, id: step.id, complete: !step.complete} : step
-    //         )
-
-    //     this._commit(this.projArr.stepArr)
-    // }
 
     editStep(id, editText){
         this.projArr.stepArr = this.projArr.stepArr.map(

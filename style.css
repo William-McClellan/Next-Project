@@ -124,7 +124,7 @@ li span:focus {
     box-shadow: 5px 5px 5px rgba(2, 2, 2, .25);
 }
 
-.dropdown-div {
+.step-form {
         margin-top: -1rem;
         /* background-color: #f0f0f0;
         border: 1px solid #ccc;
