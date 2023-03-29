@@ -18,7 +18,7 @@ export class ProjView {
       dropDownButton.addEventListener('click', (event) => {
         if (event.target.className === 'dropdown-button') {
           stepForm.style.display = stepForm.style.display === 'block' ? 'none' : 'block';
-          console.log('dropDownButton HIT');
+          //console.log('dropDownButton HIT');
         }
       });
 
@@ -61,7 +61,7 @@ function setupAddStepHandler(projArr, projId, stepText, handler) {
     // Call the handler function
     handler(projArr);
   } else {
-    console.log('addstep: project not found');
+    //console.log('addstep: project not found');
   }
 }
 

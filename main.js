@@ -4,8 +4,8 @@ import {TodoController} from './todo-list/todo-controller.js';
 import {TodoView} from './todo-list/todo-view.js';
 
 // proj
-import {ProjModel} from './model/proj-model.js';
 import {ProjController} from './proj/proj-controller.js';
+import {ProjModel} from './model/proj-model.js';
 import {ProjView} from './proj/proj-view.js';
 
 // proj instances
@@ -28,18 +28,17 @@ projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
-projView.bindDeleteStep(projController.handleDeleteStep);
 projView.bindEditStep(projController.handleEditStep);
 
 const initialproj = projModel.getproj();
 
-projView.displayProjList(initialproj, projModel.addStep);
+projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
 
 const initialtodo = todoModel.gettodo();
 todoView.displayTodoList(initialtodo);
 
-projModel.bindProjChanged((proj) => {
-    projView.displayProjList(proj);
+projModel.bindProjChanged((projArr) => {
+    projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
 })
 
 todoModel.bindtodoChanged(todoList => {

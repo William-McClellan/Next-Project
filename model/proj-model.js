@@ -4,13 +4,17 @@ export class ProjModel{
     }
 
 // PROJECT METHODS
+
     bindProjChanged(callback){
         this.projChanged = callback
     }
 
-      _commit(projArr){
+    _commitDisplay(projArr){
         this.projChanged(projArr)
-        localStorage.setItem("projArr", JSON.stringify(projArr))
+    };
+    
+    _commitToStorage(projArr){
+    localStorage.setItem("projArr", JSON.stringify(projArr))
     }
 
     addProject(projectText, input){
@@ -22,12 +26,14 @@ export class ProjModel{
             stepArr: []
         }
         this.projArr.push(project)
-        this._commit(this.projArr)
+        this._commitToStorage(this.projArr)
+        this._commitDisplay(this.projArr);
     }
 
     deleteProject(id){
         this.projArr = this.projArr.filter(project => project.id !== id);
-        this._commit(this.projArr);
+        this._commitToStorage(this.projArr);
+        this._commitDisplay(this.projArr);
     }
 
     toggleComplete(id){
@@ -35,7 +41,8 @@ export class ProjModel{
             proj => proj.id === id ? {text: proj.text, id: proj.id, complete: !proj.complete} : proj
             )
 
-        this._commit(this.projArr)
+        this._commitToStorage(this.projArr)
+        this._commitDisplay(this.projArr);
     }
 
     editProject(id, editText){
@@ -43,7 +50,8 @@ export class ProjModel{
             project => project.id === id ? {text: editText, id: project.id, complete: project.complete} : project 
         )
 
-        this._commit(this.projArr)
+        this._commitToStorage(this.projArr)
+        this._commitDisplay(this.projArr);
     }
 
     getproj(){
@@ -53,29 +61,46 @@ export class ProjModel{
 
 // STEP METHODS
     
-    setupAddStepHandler(projArr, projId, stepText, handler){
-        const projIndex = projArr.findIndex(proj => proj.id === projId);
+    addStep(projId, stepText){
+        const projIndex = this.projArr.findIndex(proj => proj.id === projId);
         
         if(projIndex !== -1){
             const step = {
             text: stepText,
-            id: new Date().getTime,
-            complete: false
+            id: new Date().getTime(),
+            complete: false 
         }
 
-        projArr[projIndex].stepArr.push(step);
+        this.projArr[projIndex].stepArr.push(step);
         
-      handler(projArr)
-        this._commit(projArr);
-        console.log(projArr);
-        } else {
-            console.log('addstep: project not found');
-        }   
+        this._commitToStorage(this.projArr);
+        this._commitDisplay(this.projArr);
+        //console.log(this.projArr.stepArr);
+
+        } 
     }
 
-    deleteStep(id){
-        this.projArr.stepArr = this.projArr.stepArr.filter(step => step.id !== id)
-        this._commit(this.projArr.stepArr)
+    
+
+    deleteStep(projArr, projId, stepId){
+    // get the index of the project
+    const projIndex = projArr.findIndex(proj => proj.id === projId);
+    //console.log(projIndex, projId);
+     if (projIndex !== -1) {
+        // get the index of the step
+        const stepIndex = projArr[projIndex].stepArr.findIndex(step => step.id === stepId);
+        //console.log('stepIndex = ' + stepIndex + ' stepId = ' + stepId);
+        if (stepIndex !== -1) {
+            // remove the step
+            projArr[projIndex].stepArr.splice(stepIndex, 1);
+            this._commitDisplay(projArr);
+            this._commitToStorage(projArr);
+        } else {
+            //console.log('deleteStep: step not found');
+        }
+    } else {
+        //console.log('deleteStep: project not found');
+    }
     }
 
     editStep(id, editText){
@@ -83,7 +108,8 @@ export class ProjModel{
             step => step.id === id ? {text: editText, id: step.id, complete: step.complete} : step 
         )
 
-        this._commit(this.projArr.stepArr)
+        this._commitToStorage(this.projArr.stepArr)
+        this._commitDisplay(this.projArr);
     }
 
     getStepArr(){

@@ -129,5 +129,14 @@ li span:focus {
         /* background-color: #f0f0f0;
         border: 1px solid #ccc;
         padding: 10px; */
-        display: none;
+        /* display: none; */
+    }
+
+    .step-item{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        display: block;
     }
