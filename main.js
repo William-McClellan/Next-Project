@@ -28,8 +28,6 @@ projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
-projView.bindEditStep(projController.handleEditStep);
-
 const initialproj = projModel.getproj();
 
 projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);

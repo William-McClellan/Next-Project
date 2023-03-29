@@ -58,38 +58,37 @@ export class ProjView{
             const completeCheckbox = createElement('input')
             completeCheckbox.type = 'checkbox'
             completeCheckbox.checked = proj.complete; 
-            projListItem.append(completeCheckbox)
-
-            // const dropDownDiv = createElement('div','dropdown-div');
 
             const projListItemSpan = createElement('span', 'editable');
             projListItemSpan.contentEditable = true;
 
+            const strikeThrough = createElement('s', 's')
+
                 if(proj.complete === true){
-                    const strikeThrough = createElement('s', 's')
                     strikeThrough.textContent = proj.text
-                    projListItem.append(strikeThrough)
                 }   else {
                     projListItemSpan.textContent = proj.text
-                    projListItem.append(projListItemSpan)
                 }
 
             const deleteButton = createElement('button', 'proj-delete-button')
             deleteButton.textContent = 'Delete'
 
-            projListItem.append(deleteButton)
-            // this.projList.append( dropDownDiv);
-            // const dropDownDiv = createElement('div', 'dropdown-div');
+            projListItem.append(completeCheckbox, strikeThrough, projListItemSpan, deleteButton)
 
             const dropDownButton = createElement('button', 'dropdown-button');
             dropDownButton.textContent = 'Steps';
             projListItem.appendChild(dropDownButton);
             
-            this.projList.append(projListItem);
 
             const displayStepList = (proj) => {        
                 //console.log('displayStepList triggered');
                 const stepList = createElement('ol','step-list');
+
+                //  stepList.addEventListener('input', event => {
+                //     if(event.target.className === 'editable'){
+                //         const _stepEditText = event.target.textContent;
+                //     }
+                //      })
 
                 const stepForm = createElement('form', 'step-form');
 
@@ -112,7 +111,7 @@ export class ProjView{
                 
                 stepForm.append(newStepInput);
 
-                this.projList.append(stepForm);
+                this.projList.append(projListItem, stepForm);
 
                 // add step listener
                 stepForm.addEventListener('submit', event =>{
@@ -147,9 +146,19 @@ export class ProjView{
                         stepList.append(stepItem);
                         stepForm.append(stepList);
                         //console.log('if statement triggered');
+
+                        // stepList.addEventListener('focusout', event =>{
+                        //             if(this._editText){
+                        //                 const id = parseInt(event.target.parentElement.id)
+                        //                 handler(id, this._editText)
+                        //                 this._editText = ''
+                        //             }
+                        //         })
                         })            
                     }
                  }       
+                    // 
+
             
                  displayStepList(proj);
                 })
@@ -211,28 +220,9 @@ export class ProjView{
 
     // PROJECT STEP METHODS
     
-    resetStepInput(){
-        newStepInput.value = '';
-    }
+    // resetStepInput(){
+    //     newStepInput.value = '';
+    // }
 
-    //STEP METHOD BINDING / LISTENERS
-
-    _initStepEditTextListener(){
-        this.stepList.addEventListener('input', event => {
-            if(event.target.className === 'editable'){
-                const _stepEditText = event.target.textContent;
-            }
-        })
-    }
-
-    bindEditStep(handler){
-        this.projList.addEventListener('focusout', event =>{
-            if(this._editText){
-                const id = parseInt(event.target.parentElement.id)
-                handler(id, this._editText)
-                this._editText = ''
-            }
-        })
-    }
 }
 
