@@ -129,7 +129,7 @@ li span:focus {
         /* background-color: #f0f0f0;
         border: 1px solid #ccc;
         padding: 10px; */
-        /* display: none; */
+        display: none;
     }
 
     .step-item{
