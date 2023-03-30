@@ -29,14 +29,15 @@ projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
 const initialproj = projModel.getproj();
+const initialstep = projModel.getStepArr();
 
-projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
+projView.displayProjList(initialproj,initialstep, projController.handleAddStep, projController.handleDeleteStep);
 
 const initialtodo = todoModel.gettodo();
 todoView.displayTodoList(initialtodo);
 
-projModel.bindProjChanged((projArr) => {
-    projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
+projModel.bindProjChanged((projArr, stepArr) => {
+    projView.displayProjList(projArr,stepArr, projController.handleAddStep, projController.handleDeleteStep)
 })
 
 todoModel.bindtodoChanged(todoList => {

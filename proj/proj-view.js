@@ -1,6 +1,4 @@
-import { getElement } from "../utils.js";
-import { createElement } from "../utils.js";
-
+import { getElement, createElement } from "../utils.js";
 export class ProjView{
     constructor(){
     
@@ -34,10 +32,13 @@ export class ProjView{
         this._editText = '';
         this.newStepText = this._newStepText;
 
-        // this.dropDownDiv = document.querySelector('.dropdown-div');
+        // create step list outside of displayStepList
+        this.stepList = createElement('ol','step-list');
 
+        this.newStepInput = createElement('input', 'new-step-input');
+        this.newStepInput.type = 'text';
+        this.newStepInput.placeholder = 'small + precise = easy';
 
-        //console.log('proj Form constructreeeeeeed');
     }
 
 // PROJ METHODS
@@ -46,7 +47,9 @@ export class ProjView{
         this.projTextInput.value = '';
     }
     
-    displayProjList(projArr, handleAddStep, handleDeleteStep){
+    displayProjList(projArr, stepArr, handleAddStep, handleDeleteStep){
+
+
         while(this.projList.firstChild){
             this.projList.removeChild(this.projList.firstChild)
         }
@@ -78,55 +81,42 @@ export class ProjView{
             const dropDownButton = createElement('button', 'dropdown-button');
             dropDownButton.textContent = 'Steps';
             projListItem.appendChild(dropDownButton);
+            this.projList.append(projListItem);
             
+            const stepForm = createElement('form', 'step-form');
+                stepForm.append(this.newStepInput);
+                stepForm.append(this.stepList);
+                 this.projList.append(stepForm);
+
 
             const displayStepList = (proj) => {        
-                //console.log('displayStepList triggered');
-                const stepList = createElement('ol','step-list');
-
-                //  stepList.addEventListener('input', event => {
-                //     if(event.target.className === 'editable'){
-                //         const _stepEditText = event.target.textContent;
-                //     }
-                //      })
-
-                const stepForm = createElement('form', 'step-form');
-
-                const newStepInput =  createElement('input', 'new-step-input')
-                newStepInput.type = 'text';
-                newStepInput.placeholder = 'small + precise = easy';
-
-
                 dropDownButton.addEventListener('click', event => {
+                    stepForm.style.display = 'none';
                 if(event.target.className === 'dropdown-button'){
                     stepForm.style.display = (stepForm.style.display === 'block') ? 'none' : 'block';
+                    console.log('test')
 
                     } 
-                    
-                    })
-
-                    stepForm.addEventListener('click', event => {
-                        event.stopPropagation();
-                    });
-                
-                stepForm.append(newStepInput);
-
-                this.projList.append(projListItem, stepForm);
-
-                // add step listener
-                stepForm.addEventListener('submit', event =>{
-                    event.preventDefault()
-                    const newStepText = newStepInput.value;
-                    handleAddStep(proj.id, newStepText);
-                    newStepInput.value = '';
                 })
+                // add step listener
                 
-                if(proj.stepArr){
-                    proj.stepArr.map((step) => {
+
+
+
+                stepForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const stepText = this.newStepInput.value;
+                    handleAddStep(proj.id, stepText);
+                    this.resetInput(); 
+                })
+                // make this so that it only displays the steps for the project that is clicked and steps are linked to their respective projects
+                // steps will need an ID and a projID which will be created in the model and passed to the view to display 
+                if(stepArr){
+                    this.stepList.innerHTML = '';
+                    stepArr.forEach(step => {
                         const stepItem = createElement('li', 'step-item');
                         stepItem.textContent = step.textContent;
                         stepItem.id = step.id;
-                        //console.log('step textContent = ' + step.textContent);
                         
                         const deleteStepButton = createElement('button', 'delete-step-button');
                         deleteStepButton.innerText = 'Delete';
@@ -135,17 +125,13 @@ export class ProjView{
                         deleteStepButton.addEventListener('click', event =>{
                             if(event.target.className === 'delete-step-button'){
                             const stepId = parseInt(event.target.parentElement.id);
-                            //console.log('stepId = ' + stepId);
                             const projId = parseInt(proj.id);
-                            console.log('projId = ' + projId);
                             handleDeleteStep(projArr, projId, stepId);
                             }
                         })
 
                         stepItem.append(deleteStepButton);
-                        stepList.append(stepItem);
-                        stepForm.append(stepList);
-                        //console.log('if statement triggered');
+                        this.stepList.append(stepItem);
 
                         // stepList.addEventListener('focusout', event =>{
                         //             if(this._editText){
@@ -157,9 +143,6 @@ export class ProjView{
                         })            
                     }
                  }       
-                    // 
-
-            
                  displayStepList(proj);
                 })
                 //console.log(projArr);
@@ -220,9 +203,5 @@ export class ProjView{
 
     // PROJECT STEP METHODS
     
-    // resetStepInput(){
-    //     newStepInput.value = '';
-    // }
-
 }
 
