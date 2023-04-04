@@ -32,14 +32,14 @@ const initialproj = projModel.getproj();
 
 projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
 
-const initialtodo = todoModel.gettodo();
+const initialtodo = todoModel.getTodoArr();
 todoView.displayTodoList(initialtodo);
 
 projModel.bindProjChanged((projArr) => {
     projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
 })
 
-todoModel.bindtodoChanged(todoList => {
+todoModel.bindtodoArrChanged(todoList => {
     todoView.displayTodoList(todoList);
 })
 

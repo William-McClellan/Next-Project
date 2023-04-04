@@ -34,10 +34,6 @@ export class ProjView{
         this._editText = '';
         this.newStepText = this._newStepText;
 
-        // this.dropDownDiv = document.querySelector('.dropdown-div');
-
-
-        //console.log('proj Form constructreeeeeeed');
     }
 
 // PROJ METHODS
@@ -46,7 +42,10 @@ export class ProjView{
         this.projTextInput.value = '';
     }
     
-    displayProjList(projArr, handleAddStep, handleDeleteStep){
+    
+    displayProjList(projArr, handleAddStep, handleDeleteStep, handleEditStep){
+            console.log('DISPLAYED');
+
         while(this.projList.firstChild){
             this.projList.removeChild(this.projList.firstChild)
         }
@@ -73,96 +72,107 @@ export class ProjView{
             const deleteButton = createElement('button', 'proj-delete-button')
             deleteButton.textContent = 'Delete'
 
-            projListItem.append(completeCheckbox, strikeThrough, projListItemSpan, deleteButton)
-
             const dropDownButton = createElement('button', 'dropdown-button');
             dropDownButton.textContent = 'Steps';
+         
+            projListItem.append(completeCheckbox, strikeThrough, projListItemSpan, deleteButton)
+
             projListItem.appendChild(dropDownButton);
+
+          
+
             
 
             const displayStepList = (proj) => {        
-                //console.log('displayStepList triggered');
+                // DOM ELEMENTS                    
+
                 const stepList = createElement('ol','step-list');
-
-                //  stepList.addEventListener('input', event => {
-                //     if(event.target.className === 'editable'){
-                //         const _stepEditText = event.target.textContent;
-                //     }
-                //      })
-
-                const stepForm = createElement('form', 'step-form');
 
                 const newStepInput =  createElement('input', 'new-step-input')
                 newStepInput.type = 'text';
                 newStepInput.placeholder = 'small + precise = easy';
 
+                const stepForm = createElement('form', 'step-form');
 
-                dropDownButton.addEventListener('click', event => {
-                if(event.target.className === 'dropdown-button'){
-                    stepForm.style.display = (stepForm.style.display === 'block') ? 'none' : 'block';
-
-                    } 
-                    
-                    })
-
-                    stepForm.addEventListener('click', event => {
-                        event.stopPropagation();
-                    });
+                const dropdownDiv = createElement('div', 'dropdown-div');
                 
+                if(proj.dropDownButtonOn === false){
+                dropdownDiv.style.display = 'none';
+                }
+                console.log('display func made proj.dropDownButtonOn = ' + proj.dropDownButtonOn);
+
                 stepForm.append(newStepInput);
 
-                this.projList.append(projListItem, stepForm);
+                dropdownDiv.append(stepForm, stepList);
 
-                // add step listener
-                stepForm.addEventListener('submit', event =>{
-                    event.preventDefault()
+                this.projList.append(projListItem, dropdownDiv );
+
+                // LINSTENERS
+
+                // edit step listener
+                 stepList.addEventListener('input', event => {
+                    if(event.target.className === 'editable'){
+                        const _stepEditText = event.target.textContent;
+                        handleEditStep(_stepEditText);
+                    }
+                     })
+
+                 // add step listener
+                stepForm.addEventListener('submit', (event) =>{
+                    event.preventDefault();
                     const newStepText = newStepInput.value;
                     handleAddStep(proj.id, newStepText);
-                    newStepInput.value = '';
+                    console.log('newStepText = ' + newStepText);
+
+                // Refocus the input field after submission with a slight delay NOT WORKING
+
+                    setTimeout(() => newStepInput.focus(), 50);
                 })
+
+
+                dropDownButton.addEventListener('click', event => {
+                    if(event.target.className === 'dropdown-button' && dropdownDiv.style.display === 'none' ){
+                    dropdownDiv.style.display = 'block';
+                    projListItem.style.borderBottom = 'none';
+                    proj.dropDownButtonOn = true;
+                    newStepInput.focus();
+                } else if (event.target.className === 'dropdown-button'){
+                    dropdownDiv.style.display = 'none';
+                    projListItem.style.borderBottom = '4px solid lightblue';
+
+                    proj.dropDownButtonOn = false;
+                    }
+                }
+                )
                 
                 if(proj.stepArr){
                     proj.stepArr.map((step) => {
                         const stepItem = createElement('li', 'step-item');
-                        stepItem.textContent = step.textContent;
+                        stepItem.textContent = step.text;
+                        console.log('stepItem.textContent = ' + stepItem.textContent);
+                        console.log('step.textContent = ' + step.textContent);
                         stepItem.id = step.id;
-                        //console.log('step textContent = ' + step.textContent);
                         
                         const deleteStepButton = createElement('button', 'delete-step-button');
                         deleteStepButton.innerText = 'Delete';
+
+                        stepItem.append(deleteStepButton);
+                        stepList.append(stepItem);
 
                         // delete step listener
                         deleteStepButton.addEventListener('click', event =>{
                             if(event.target.className === 'delete-step-button'){
                             const stepId = parseInt(event.target.parentElement.id);
-                            //console.log('stepId = ' + stepId);
                             const projId = parseInt(proj.id);
                             console.log('projId = ' + projId);
                             handleDeleteStep(projArr, projId, stepId);
                             }
                         })
-
-                        stepItem.append(deleteStepButton);
-                        stepList.append(stepItem);
-                        stepForm.append(stepList);
-                        //console.log('if statement triggered');
-
-                        // stepList.addEventListener('focusout', event =>{
-                        //             if(this._editText){
-                        //                 const id = parseInt(event.target.parentElement.id)
-                        //                 handler(id, this._editText)
-                        //                 this._editText = ''
-                        //             }
-                        //         })
-                        })            
+                        })          
                     }
                  }       
-                    // 
-
-            
                  displayStepList(proj);
                 })
-                //console.log(projArr);
     }
 
      get _projText(){
@@ -217,12 +227,6 @@ export class ProjView{
             }
         })
     }
-
-    // PROJECT STEP METHODS
-    
-    // resetStepInput(){
-    //     newStepInput.value = '';
-    // }
 
 }
 

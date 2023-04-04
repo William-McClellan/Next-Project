@@ -4,8 +4,8 @@ export class TodoController{
         this.view = view;
     }
 
-    todoChanged = (todo) =>{
-        view.displayTodoList(todo)
+    todoChanged = (todoArr) =>{
+        view.displayTodoList(todoArr)
     }
 
     handleAddTodo = (todoText) =>{

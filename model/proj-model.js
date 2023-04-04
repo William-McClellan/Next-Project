@@ -20,10 +20,11 @@ export class ProjModel{
     addProject(projectText, input){
         const project = {
             text: projectText,
-            id: this.projArr.length,
+            id: new Date().getTime(),
             complete: false,
             newStepInput: input,
-            stepArr: []
+            stepArr: [],
+            dropDownButtonOn: false,
         }
         this.projArr.push(project)
         this._commitToStorage(this.projArr)
@@ -70,13 +71,11 @@ export class ProjModel{
             id: new Date().getTime(),
             complete: false 
         }
-
         this.projArr[projIndex].stepArr.push(step);
         
         this._commitToStorage(this.projArr);
         this._commitDisplay(this.projArr);
-        //console.log(this.projArr.stepArr);
-
+        console.log(this.projArr[projIndex].stepArr);
         } 
     }
 

@@ -1,55 +1,55 @@
 
 export class TodoModel{
     constructor(){
-        this.todo = JSON.parse(localStorage.getItem("todo")) || [];
+        this.todoArr = JSON.parse(localStorage.getItem("todoArr")) || [];
     
     }
    
-    bindtodoChanged(callback){
-        this.todoChanged = callback
+    bindtodoArrChanged(callback){
+        this.todoArrChanged = callback
     }
 
-    _commit(todo){
-        this.todoChanged(todo)
-        localStorage.setItem("todo", JSON.stringify(todo))
+    _commit(todoArr){
+        this.todoArrChanged(todoArr)
+        localStorage.setItem("todoArr", JSON.stringify(todoArr))
     }
 
     addTodo(todoText){
         const todo = {
             text: todoText,
-            id: this.todo.length,
+            id: this.todoArr.length,
             complete: false
         }
-        this.todo.push(todo)
-        this._commit(this.todo)
+        this.todoArr.push(todo)
+        this._commit(this.todoArr)
     }
 
     deleteTodo(id){
-        this.todo = this.todo.filter(todo => todo.id !== id)
-        this._commit(this.todo)
+        this.todoArr = this.todoArr.filter(todoArr => todoArr.id !== id)
+        this._commit(this.todoArr)
     }
 
     toggleComplete(id){
-        this.todo = this.todo.map(
+        this.todoArr = this.todoArr.map(
             todo => todo.id === id ? {text: todo.text, id: todo.id, complete: !todo.complete} : todo
             )
 
-        this._commit(this.todo)
+        this._commit(this.todoArr)
     }
 
     editTodo(id, editText){
-        this.todo = this.todo.map(
+        this.todoArr= this.todoArr.map(
             todo => todo.id === id ? {text: editText, id: todo.id, complete: todo.complete} : todo 
         )
 
-        this._commit(this.todo)
+        this._commit(this.todoArr)
     }
 
     
     
-    gettodo(){
-        const todo = this.todo;
-        return todo;
+    getTodoArr(){
+        const todoArr = this.todoArr;
+        return todoArr;
     }
 }
 
