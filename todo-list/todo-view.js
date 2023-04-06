@@ -2,6 +2,7 @@ import { getElement, createElement} from "../utils.js";
     
 export class TodoView{
     constructor(model){
+
         this.model = model;
         this.app = getElement('#root');       
         
@@ -15,7 +16,7 @@ export class TodoView{
 
         this.form = createElement('form');
 
-        this.todoTextInput = createElement('input','todoInput');
+        this.todoTextInput = createElement('input','todo-input');
         this.todoTextInput.type = 'text';
         this.todoTextInput.placeholder = 'What to do...';
 
@@ -40,18 +41,47 @@ export class TodoView{
 
 
 
-    displayTodoList(todo){
+    displayTodoList(todoArr, firstStepArr){
+
+            console.log('TodoView - displayTodoList - firstStepArr', firstStepArr);
+
         while(this.todoList.firstChild){
             this.todoList.removeChild(this.todoList.firstChild)
         }
-        if(todo.length === 0){
+
+        if(firstStepArr.length > 0){
+        firstStepArr.forEach((step) => {
+            const firstStepItem = createElement('li', 'first-step-item')
+            firstStepItem.id = step.id
+            console.log('step.id = ' , step.id)
+
+            const firstStepItemSpan = createElement('span', 'editable');
+            firstStepItemSpan.contentEditable = true;
+            firstStepItemSpan.textContent = step.text;
+
+            const firstStepItemProjText = createElement('span', 'project-text');
+            firstStepItemProjText.textContent = '# ' + step.projText;
+
+            const firstStepItemCheckbox = createElement('input')
+            firstStepItemCheckbox.type = 'checkbox'
+            firstStepItemCheckbox.checked = step.complete;
+
+            const firstStepItemDeleteButton = createElement('button', 'delete-button')
+            firstStepItemDeleteButton.textContent = 'Delete'
+
+            firstStepItem.append(firstStepItemCheckbox, firstStepItemSpan,firstStepItemProjText, firstStepItemDeleteButton)
+            this.todoList.prepend(firstStepItem);
+        })
+        }
+
+        if(todoArr.length === 0){
             //console.log(todo)
             const todoListPlaceholder = createElement('p')
             todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
             this.todoList.append(todoListPlaceholder)
         } else {
-            todo.forEach(todo => {
-                const todoListItem = createElement('li', 'todoListItem')
+            todoArr.forEach(todo => {
+                const todoListItem = createElement('li', 'todo-list-item')
                 todoListItem.id = todo.id
                 // todoListItem.classList.add('li');
 
@@ -72,7 +102,7 @@ export class TodoView{
                         todoListItem.append(todoListItemSpan)
                     }
 
-                const deleteButton = createElement('button', 'Delete')
+                const deleteButton = createElement('button', 'delete-button')
                 deleteButton.textContent = 'Delete'
 
                 todoListItem.append(deleteButton)

@@ -5,6 +5,19 @@ export class ProjModel{
 
 // PROJECT METHODS
 
+    getFirstStepArr(){
+        if (this.projArr.length === 0) {
+        return [];
+    }
+        const firstStepArr = [];
+       this.projArr.forEach(proj => {
+        if (proj.stepArr.length > 0) {
+            firstStepArr.push(proj.stepArr[0]);
+            }
+    });
+        return firstStepArr;
+    }
+
     bindProjChanged(callback){
         this.projChanged = callback
     }
@@ -69,13 +82,14 @@ export class ProjModel{
             const step = {
             text: stepText,
             id: new Date().getTime(),
-            complete: false 
+            complete: false,
+            projText: this.projArr[projIndex].text,
         }
         this.projArr[projIndex].stepArr.push(step);
         
         this._commitToStorage(this.projArr);
         this._commitDisplay(this.projArr);
-        console.log(this.projArr[projIndex].stepArr);
+        // console.log(this.projArr[projIndex].stepArr);
         } 
     }
 

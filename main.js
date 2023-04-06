@@ -33,15 +33,21 @@ const initialproj = projModel.getproj();
 projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
 
 const initialtodo = todoModel.getTodoArr();
-todoView.displayTodoList(initialtodo);
+const initialFirstStepArr = projModel.getFirstStepArr();
+todoView.displayTodoList(initialtodo, initialFirstStepArr);
 
 projModel.bindProjChanged((projArr) => {
+        console.log('main.js - projModel.getFirstStepArr()', projModel.getFirstStepArr());
     projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
+    todoView.displayTodoList(todoModel.getTodoArr(), projModel.getFirstStepArr());
 })
 
-todoModel.bindtodoArrChanged(todoList => {
-    todoView.displayTodoList(todoList);
+todoModel.bindtodoArrChanged((todoArr) => {
+        console.log('main.js - projModel.getFirstStepArr()', projModel.getFirstStepArr());
+
+    todoView.displayTodoList(todoArr, projModel.getFirstStepArr());
 })
+
 
 
 

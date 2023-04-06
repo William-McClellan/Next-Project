@@ -1,3 +1,4 @@
+import { TodoView } from "../todo-list/todo-view.js";
 import { getElement } from "../utils.js";
 import { createElement } from "../utils.js";
 
@@ -8,7 +9,7 @@ export class ProjView{
         this.getElement = getElement;
         this.createElement = createElement;
         
-        this.projDiv = createElement('div', 'projDiv')
+        this.projDiv = createElement('div', 'proj-div')
 
         this.app = this.getElement('#root');
         
@@ -19,7 +20,7 @@ export class ProjView{
         this.title = createElement('h1');
         this.title.textContent = 'Projects';
 
-        this.projTextInput = createElement('input','projInput');
+        this.projTextInput = createElement('input','proj-input');
         this.projTextInput.type = 'text';
         this.projTextInput.placeholder = 'Add a new project';
 
@@ -41,8 +42,7 @@ export class ProjView{
     resetInput(){
         this.projTextInput.value = '';
     }
-    
-    
+
     displayProjList(projArr, handleAddStep, handleDeleteStep, handleEditStep){
             console.log('DISPLAYED');
 
@@ -58,7 +58,7 @@ export class ProjView{
             completeCheckbox.type = 'checkbox'
             completeCheckbox.checked = proj.complete; 
 
-            const projListItemSpan = createElement('span', 'editable');
+            const projListItemSpan = createElement('span', 'editable', 'proj-list-item-span');
             projListItemSpan.contentEditable = true;
 
             const strikeThrough = createElement('s', 's')
@@ -69,7 +69,7 @@ export class ProjView{
                     projListItemSpan.textContent = proj.text
                 }
 
-            const deleteButton = createElement('button', 'proj-delete-button')
+            const deleteButton = createElement('button', 'proj-delete-button', 'delete-button')
             deleteButton.textContent = 'Delete'
 
             const dropDownButton = createElement('button', 'dropdown-button');
@@ -99,7 +99,7 @@ export class ProjView{
                 if(proj.dropDownButtonOn === false){
                 dropdownDiv.style.display = 'none';
                 }
-                console.log('display func made proj.dropDownButtonOn = ' + proj.dropDownButtonOn);
+                // console.log('display func made proj.dropDownButtonOn = ' + proj.dropDownButtonOn);
 
                 stepForm.append(newStepInput);
 
@@ -122,7 +122,7 @@ export class ProjView{
                     event.preventDefault();
                     const newStepText = newStepInput.value;
                     handleAddStep(proj.id, newStepText);
-                    console.log('newStepText = ' + newStepText);
+                    // console.log('newStepText = ' + newStepText);
 
                 // Refocus the input field after submission with a slight delay NOT WORKING
 
@@ -133,13 +133,10 @@ export class ProjView{
                 dropDownButton.addEventListener('click', event => {
                     if(event.target.className === 'dropdown-button' && dropdownDiv.style.display === 'none' ){
                     dropdownDiv.style.display = 'block';
-                    projListItem.style.borderBottom = 'none';
                     proj.dropDownButtonOn = true;
                     newStepInput.focus();
                 } else if (event.target.className === 'dropdown-button'){
                     dropdownDiv.style.display = 'none';
-                    projListItem.style.borderBottom = '4px solid lightblue';
-
                     proj.dropDownButtonOn = false;
                     }
                 }
@@ -149,11 +146,11 @@ export class ProjView{
                     proj.stepArr.map((step) => {
                         const stepItem = createElement('li', 'step-item');
                         stepItem.textContent = step.text;
-                        console.log('stepItem.textContent = ' + stepItem.textContent);
-                        console.log('step.textContent = ' + step.textContent);
+                        // console.log('stepItem.textContent = ' + stepItem.textContent);
+                        // console.log('step.textContent = ' + step.textContent);
                         stepItem.id = step.id;
                         
-                        const deleteStepButton = createElement('button', 'delete-step-button');
+                        const deleteStepButton = createElement('button', 'delete-step-button', 'delete-button');
                         deleteStepButton.innerText = 'Delete';
 
                         stepItem.append(deleteStepButton);
@@ -164,17 +161,20 @@ export class ProjView{
                             if(event.target.className === 'delete-step-button'){
                             const stepId = parseInt(event.target.parentElement.id);
                             const projId = parseInt(proj.id);
-                            console.log('projId = ' + projId);
+                            // console.log('projId = ' + projId);
                             handleDeleteStep(projArr, projId, stepId);
                             }
                         })
                         })          
                     }
+                    this.displayFirstStepArr
                  }       
+                     
+                 
                  displayStepList(proj);
                 })
-    }
-
+            }
+           
      get _projText(){
         const _projText = this.projTextInput.value
         return _projText

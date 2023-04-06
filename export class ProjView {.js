@@ -61,7 +61,7 @@ function setupAddStepHandler(projArr, projId, stepText, handler) {
     // Call the handler function
     handler(projArr);
   } else {
-    //console.log('addstep: project not found');
+    console.log('addstep: project not found');
   }
 }
 
