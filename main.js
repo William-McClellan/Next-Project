@@ -14,7 +14,7 @@ const projView = new ProjView(projModel);
 const projController = new ProjController(projModel,projView);
 
 // todo instances
-const todoModel = new TodoModel();
+const todoModel = new TodoModel(projModel);
 const todoView = new TodoView(todoModel);
 const todoController = new TodoController(todoModel,todoView);
 
@@ -28,7 +28,7 @@ projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
-const initialproj = projModel.getproj();
+const initialproj = projModel.getProjArr();
 
 projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
 
@@ -36,17 +36,23 @@ const initialtodo = todoModel.getTodoArr();
 const initialFirstStepArr = projModel.getFirstStepArr();
 todoView.displayTodoList(initialtodo, initialFirstStepArr);
 
-projModel.bindProjChanged((projArr) => {
-        console.log('main.js - projModel.getFirstStepArr()', projModel.getFirstStepArr());
-    projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
+projModel.bindProjChanged(() => {
+    projView.displayProjList(projModel.getProjArr(), projController.handleAddStep, projController.handleDeleteStep)
     todoView.displayTodoList(todoModel.getTodoArr(), projModel.getFirstStepArr());
+    localStorage.setItem("todoArr", JSON.stringify(todoModel.getTodoArr()))
+    localStorage.setItem("projArr", JSON.stringify(projModel.getProjArr()))
+    localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
 })
 
-todoModel.bindtodoArrChanged((todoArr) => {
-        console.log('main.js - projModel.getFirstStepArr()', projModel.getFirstStepArr());
-
-    todoView.displayTodoList(todoArr, projModel.getFirstStepArr());
+todoModel.bindtodoArrChanged((projArr, firstStepArr) => {
+    projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
+    todoView.displayTodoList(todoModel.getTodoArr(), firstStepArr);
+    localStorage.setItem("todoArr", JSON.stringify(todoModel.getTodoArr()))
+    localStorage.setItem("projArr", JSON.stringify(projArr))
+    localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
 })
+
+
 
 
 
