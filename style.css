@@ -48,9 +48,10 @@ form {
 .todo-input.proj-input {
     border: 2px solid lightblue;
     color: gray;
-    height: 2rem;
+    height: 3rem;
     width: 6rem;
     border-radius: .3rem;
+    font-size: large;
 }
 
 .todo-input.proj-input:focus {
@@ -59,19 +60,19 @@ form {
     outline: none;
 }
 
+.new-step-input{
+    height: 2rem    ;
+}
+
 button {
     display: inline-block;
     height: 100%;
     font-size: inherit;
     border-radius: .3rem;
     border: 2px solid lightblue;
-}
-
-button {
     cursor: pointer;
     background-color: lightblue;
     color: white;
-    border-radius: .3rem;
 }
 
 button:hover {
@@ -106,19 +107,28 @@ li{
         padding: .5rem;
 }
 .first-step-item{
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    align-content: center;
     padding-right: 2rem;
     margin-bottom: .5rem;
 }
 
+.todo-list{
+    margin-top: -1rem;
+}
+
 .todo-list-item{
 margin-bottom: .5rem;}
+
+
 
 .delete-button{
   position: absolute;  
   right: 0;
   margin: 0;
     outline: 2px solid lightblue;
-    height: 100%;
 }
 
 .delete-step-button{
@@ -126,6 +136,11 @@ margin-bottom: .5rem;}
     right: 0;
     top: 0;
     
+}
+.proj-delete-button{
+    margin-left: 4rem;
+    height: 3rem;
+    outline: 2px solid lightblue;
 }
 
 .proj-list{
@@ -177,6 +192,8 @@ span,
 }
 .proj-list-item-span{
     display: inline-block;
+    padding-left: 1rem;
+    padding-right: 2rem;
 }
 
 li span:hover {
@@ -202,7 +219,8 @@ li span:focus {
     width: 100%;
     height: 100%;
     margin-top: 1rem;
-margin-bottom: -3rem;}
+/* margin-bottom: -3rem; */
+}
 
 .dropdown-button{
 margin-left: 2rem;
@@ -221,20 +239,7 @@ margin-left: 2rem;
     margin-left: -2.5rem;
 }
 
-/* .step-item {
-    display: flex;
-    padding: .5rem;
-    margin-bottom: 1rem;
-    background-color: rgb(177, 245, 222);
-    border-radius: .3rem;
-    border: 2px solid rgb(126, 208, 180);
-    font-size: medium;
-
-} */
 
 .project-text{
-padding-right: 1rem;}
-
-.new-step-input{
-
+padding-right: 1rem;
 }

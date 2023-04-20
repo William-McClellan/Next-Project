@@ -1,13 +1,14 @@
-import { getElement, createElement} from "../utils.js";
+import { getElement, createElement, clearList} from "../utils.js";
+import { ProjModel } from "../model/proj-model.js";
+
     
 export class TodoView{
     constructor(model){
 
         this.model = model;
         this.app = getElement('#root');       
-        
-        this.todoDiv = createElement('div','todoDiv')
 
+        this.todoDiv = createElement('div','todoDiv')
 
         this.todoList = createElement('ul', 'todo-list');
 
@@ -18,7 +19,7 @@ export class TodoView{
 
         this.todoTextInput = createElement('input','todo-input');
         this.todoTextInput.type = 'text';
-        this.todoTextInput.placeholder = 'What to do...';
+        this.todoTextInput.placeholder = 'small + precise = actionable';
 
         this.submitTodoButton = createElement('button');
         this.submitTodoButton.textContent = 'Add';
@@ -30,8 +31,7 @@ export class TodoView{
         this._initEditTextListener();
         this._editText = '';
 
-        //console.log('Form constructreeeeeeed');
-        
+        this.firstStepList = createElement('ul', 'first-step-list');
     }
 
 
@@ -39,78 +39,117 @@ export class TodoView{
         this.todoTextInput.value = '';
     }
 
+    createFirstStepItems(step){
+        const firststepItem = createElement('li', 'first-step-item');
+        firststepItem.id = step.id;
 
+        const firststepItemSpan = createElement('span', 'editable');
+        firststepItemSpan.contentEditable = true;
+        firststepItemSpan.textContent = step.text;
+
+        const firststepItemProjText = createElement('span', 'project-text');
+        firststepItemProjText.textContent = '# ' + step.projText;
+
+        const firststepItemCheckbox = createElement('input');
+        firststepItemCheckbox.type = 'checkbox';
+        firststepItemCheckbox.checked = step.complete;
+
+        const firststepItemDeleteButton = createElement('button', ['delete-button', 'delete-first-step-button']);
+        firststepItemDeleteButton.textContent = 'Delete';
+
+        this.addDeleteFirstStepButtonListener(firststepItemDeleteButton, step);
+
+        this.appendFirstStepItemElements(firststepItem, firststepItemCheckbox, firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
+
+        return firststepItem;
+    }
+    
+
+    appendFirstStepItemElements(
+        firststepItem,
+        firststepItemCheckbox,
+        firststepItemSpan,
+        firststepItemProjText,
+        firststepItemDeleteButton
+    ) {
+        firststepItem.append(
+            firststepItemCheckbox,
+            firststepItemSpan,
+            firststepItemProjText,
+            firststepItemDeleteButton
+        );
+    }
+
+    addDeleteFirstStepButtonListener(deleteButton, step){
+        deleteButton.addEventListener('click', (e) => {
+            if(e.target.classList.contains('delete-first-step-button') && e.target.classList.contains('delete-button')){
+                e.preventDefault();
+                console.log('Delete first step button clicked');
+                console.log(e.target.parentElement)
+                const projId = step.projId;
+                this.model.deleteFirstStep(projId);
+            }
+        })
+    }
+
+    createTodoListPlaceHolder(){
+        const todoListPlaceholder = createElement('p')
+        todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
+        this.todoList.append(todoListPlaceholder)
+    }
+
+    createTodoListItem(todo){
+        const todoListItem = createElement('li', 'todo-list-item')
+        todoListItem.id = todo.id
+
+        const completeCheckbox = createElement('input')
+        completeCheckbox.type = 'checkbox'
+        completeCheckbox.checked = todo.complete
+        todoListItem.append(completeCheckbox)
+
+        const todoListItemSpan = createElement('span', 'editable');
+        todoListItemSpan.contentEditable = true;
+
+        if(todo.complete === true){
+            const strikeThrough = createElement('s', 's')
+            strikeThrough.textContent = todo.text
+            todoListItem.append(strikeThrough)
+        }   else {
+            todoListItemSpan.textContent = todo.text
+            todoListItem.append(todoListItemSpan)
+        }
+
+        const deleteButton = createElement('button',['delete-todo-button', 'delete-button'])
+        deleteButton.textContent = 'Delete'
+        todoListItem.append(deleteButton)
+
+        return todoListItem;
+    }
 
     displayTodoList(todoArr, firstStepArr){
 
-            console.log('TodoView - displayTodoList - firstStepArr', firstStepArr);
-
-        while(this.todoList.firstChild){
-            this.todoList.removeChild(this.todoList.firstChild)
-        }
-
+        clearList(this.todoList);
+        clearList(this.firstStepList);
+        
         if(firstStepArr.length > 0){
-        firstStepArr.forEach((step) => {
-            const firstStepItem = createElement('li', 'first-step-item')
-            firstStepItem.id = step.id
-            console.log('step.id = ' , step.id)
-
-            const firstStepItemSpan = createElement('span', 'editable');
-            firstStepItemSpan.contentEditable = true;
-            firstStepItemSpan.textContent = step.text;
-
-            const firstStepItemProjText = createElement('span', 'project-text');
-            firstStepItemProjText.textContent = '# ' + step.projText;
-
-            const firstStepItemCheckbox = createElement('input')
-            firstStepItemCheckbox.type = 'checkbox'
-            firstStepItemCheckbox.checked = step.complete;
-
-            const firstStepItemDeleteButton = createElement('button', 'delete-button')
-            firstStepItemDeleteButton.textContent = 'Delete'
-
-            firstStepItem.append(firstStepItemCheckbox, firstStepItemSpan,firstStepItemProjText, firstStepItemDeleteButton)
-            this.todoList.prepend(firstStepItem);
+            firstStepArr.forEach((step) => {
+            const firstStepItems = this.createFirstStepItems(step);
+            this.firstStepList.append(firstStepItems);
         })
+            this.todoList.prepend(this.firstStepList);
         }
+        
+        const bothArrsEmpty =  todoArr.length === 0 && firstStepArr.length === 0;
 
-        if(todoArr.length === 0){
-            //console.log(todo)
-            const todoListPlaceholder = createElement('p')
-            todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
-            this.todoList.append(todoListPlaceholder)
-        } else {
-            todoArr.forEach(todo => {
-                const todoListItem = createElement('li', 'todo-list-item')
-                todoListItem.id = todo.id
-                // todoListItem.classList.add('li');
-
-                const completeCheckbox = createElement('input')
-                completeCheckbox.type = 'checkbox'
-                completeCheckbox.checked = todo.complete
-                todoListItem.append(completeCheckbox)
-
-                const todoListItemSpan = createElement('span', 'editable');
-                todoListItemSpan.contentEditable = true;
-
-                    if(todo.complete === true){
-                        const strikeThrough = createElement('s', 's')
-                        strikeThrough.textContent = todo.text
-                        todoListItem.append(strikeThrough)
-                    }   else {
-                        todoListItemSpan.textContent = todo.text
-                        todoListItem.append(todoListItemSpan)
-                    }
-
-                const deleteButton = createElement('button', 'delete-button')
-                deleteButton.textContent = 'Delete'
-
-                todoListItem.append(deleteButton)
+        if(bothArrsEmpty){
+            this.createTodoListPlaceHolder();
+         } else {
+                todoArr.forEach(todo => {
+                const todoListItem = this.createTodoListItem(todo);
 
                 this.todoList.append(todoListItem)
             })
        }
-       //console.log(todo)
     }
 
     get _todoText(){
@@ -131,7 +170,8 @@ export class TodoView{
 
     bindDeleteTodo(handler){
         this.todoList.addEventListener('click', event =>{
-            if(event.target.className === 'Delete'){
+            if(event.target.className === "delete-todo-button delete-button"){
+                console.log('delete-todo-button clicked')
                 const id = parseInt(event.target.parentElement.id)
                 handler(id)    
             }

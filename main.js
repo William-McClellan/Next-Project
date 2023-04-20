@@ -23,14 +23,15 @@ todoView.bindDeleteTodo(todoController.handleDeleteTodo);
 todoView.bindToggleComplete(todoController.handleToggleComplete);
 todoView.bindEditTodo(todoController.handleEditTodo);
 
-projView.bindAddProject(projController.handleAddProject);
+projView.addNewProjectListener(projController.handleAddProject);
 projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
+
 const initialproj = projModel.getProjArr();
 
-projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep);
+projView.displayProjList(initialproj, projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep);
 
 const initialtodo = todoModel.getTodoArr();
 const initialFirstStepArr = projModel.getFirstStepArr();
@@ -44,13 +45,14 @@ projModel.bindProjChanged(() => {
     localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
 })
 
-todoModel.bindtodoArrChanged((projArr, firstStepArr) => {
+todoModel.bindTodoArrChanged((projArr, firstStepArr) => {
     projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
     todoView.displayTodoList(todoModel.getTodoArr(), firstStepArr);
     localStorage.setItem("todoArr", JSON.stringify(todoModel.getTodoArr()))
     localStorage.setItem("projArr", JSON.stringify(projArr))
     localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
 })
+
 
 
 
