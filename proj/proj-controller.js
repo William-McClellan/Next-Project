@@ -22,8 +22,8 @@ export class ProjController{
     handleAddStep = (projId, stepText) => {
         this.model.addStep( projId, stepText);
     }
-    handleDeleteStep = (projArr, projId, stepId) =>{
-        this.model.deleteStep(projArr, projId, stepId);
+    handleDeleteStep = (projId) =>{
+        this.model.deleteStep(projId);
     }
     handleEditStep = (id, stepText) =>{
         this.model.editStep(id, stepText);

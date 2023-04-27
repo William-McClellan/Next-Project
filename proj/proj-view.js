@@ -118,7 +118,10 @@ export class ProjView{
             if(event.target.className === 'delete-step-button'){
             const stepId = parseInt(event.target.parentElement.id);
             const projId = parseInt(proj.id);
-            handler(projArr, projId, stepId);
+            // console.log("🚀 ~ file: proj-view.js:121 ~ ProjView ~ addDeleteStepListener ~ projId:", projId)
+            
+            handler(projId, stepId);
+            // console.log("🚀 ~ file: proj-view.js:123 ~ ProjView ~ addDeleteStepListener ~ handler")
             }
         })
     }
@@ -138,9 +141,10 @@ export class ProjView{
             const newStepTextInput = event.target.querySelector('.new-step-input');
             const newStepText = newStepTextInput.value;
             handler(proj.id, newStepText);
-
-        // Refocus the input field after submission with a slight delay NOT WORKING
-            setTimeout(() => newStepTextInput.focus(), 50);
+            console.log("🚀 ~ file: proj-view.js:139 ~ ProjView ~ addNewStepListener ~ addNewStepListener:")
+            
+            // Refocus the input field after submission with a slight delay NOT WORKING
+                setTimeout(() => newStepTextInput.focus(), 50);
         })
 
     }
@@ -151,7 +155,6 @@ export class ProjView{
             if(event.target.className === 'dropdown-button' && dropDownDiv.style.display === 'none' ){
                 dropDownDiv.style.display = 'block';
                 proj.dropDownButtonOn = true;
-                console.log('newStepInput from listener = ', newStepInput);
                 newStepInput.focus();
             } 
                 else if (event.target.className === 'dropdown-button'){
@@ -170,18 +173,20 @@ export class ProjView{
 
 
     displayProjList(projArr, handleAddStep, handleEditStep, handleDeleteStep){
-        console.log('projList DISPLAYED');
+    console.log("🚀 ~ file: proj-view.js:176 ~ ProjView ~ displayProjList ~ projArr:", projArr)
 
         clearList(this.projList);
 
+        
         projArr.forEach(proj => {
+            console.log("🚀 ~ file: proj-view.js:183 ~ ProjView ~ displayProjList ~ proj:", proj)
             const projListItem = this.createProjListItem(proj, handleAddStep, handleEditStep);
 
             const dropDownDiv = this.createDropDown(proj, handleAddStep, handleEditStep);
-
             const stepList = dropDownDiv.querySelector('.step-list');
-
+            
             if(proj.stepArr){
+            console.log("🚀 ~ file: proj-view.js:186 ~ ProjView ~ displayProjList ~ proj.stepArr:", proj.stepArr)
             
             proj.stepArr.map((step) => {
             const stepItem = this.createStepItem(handleDeleteStep, step, proj, projArr);
@@ -193,7 +198,6 @@ export class ProjView{
             const stepForm = dropDownDiv.querySelector('.step-form');
 
             const newStepInput = stepForm.querySelector('.new-step-input');
-            console.log('newStepInput from display func= ', newStepInput);
             this.addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj)
 
             
@@ -215,7 +219,6 @@ export class ProjView{
             event.preventDefault()
             if(this._projText){
                 handler(this._projText)
-                console.log('this._projText = ', this._projText)
                 this.resetInput()
             }
         })

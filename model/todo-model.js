@@ -1,39 +1,36 @@
-import { ProjModel } from "./proj-model.js";
+import projModelInstance from "./proj-model.js";
 export class TodoModel{
     constructor(){
         this.todoArr = JSON.parse(localStorage.getItem("todoArr")) || [];
-        this.projModel = new ProjModel();   
-        this.projArr = JSON.parse(localStorage.getItem("projArr")) || this.projModel.getProjArr();
-        this.firstStepArr = JSON.parse(localStorage.getItem("firstStepArr")) || this.projModel.getFirstStepArr();
+        this.projModel = projModelInstance;   
         
-        console.log('this.projArr from TodoModel constructor: ', this.projArr);
+        this.todoArrChanged = () => {};
     }
-
+ 
    
     bindTodoArrChanged(callback){
-        const projArr = this.projModel.getProjArr();
-        const firstStepArr = this.projModel.getFirstStepArr();
-        this.todoArrChanged = () => callback(projArr, firstStepArr);    
+        this.todoArrChanged = () => callback();    
     }
 
-    _commit(projArr, firstStepArr){
-        this.todoArrChanged(projArr, firstStepArr)
+    _commit(){
+        this.todoArrChanged()
+        localStorage.setItem("todoArr", JSON.stringify(todoModelInstance.getTodoArr()))
     }
 
     addTodo(todoText){
         const todo = {
             text: todoText,
-            id: this.todoArr.length,
+            id: crypto.randomUUID(),
             complete: false
         }
         this.todoArr.push(todo)
-        this._commit(this.projModel.getProjArr(), this.projModel.getFirstStepArr())
+        this._commit()
     }
-
+ 
+    
     deleteTodo(id){
         this.todoArr = this.todoArr.filter(todoArr => todoArr.id !== id)
-        this._commit(this.projModel.getProjArr(), this.projModel.getFirstStepArr())
-        console.log('deleteTodo method ran')
+        this._commit()
     }
 
     toggleComplete(id){
@@ -41,7 +38,7 @@ export class TodoModel{
             todo => todo.id === id ? {text: todo.text, id: todo.id, complete: !todo.complete} : todo
             )
 
-        this._commit(this.projModel.getProjArr(), this.projModel.getFirstStepArr())
+        this._commit()
     }
 
     editTodo(id, editText){
@@ -49,7 +46,7 @@ export class TodoModel{
             todo => todo.id === id ? {text: editText, id: todo.id, complete: todo.complete} : todo 
         )
 
-        this._commit(this.projModel.getProjArr(), this.projModel.getFirstStepArr())
+        this._commit()
     }
 
     getTodoArr(){
@@ -57,20 +54,27 @@ export class TodoModel{
         return todoArr;
     }
 
-    deleteFirstStep(projId){
-        const projIndex = this.projArr.findIndex(proj => proj.id === projId);
+    deleteFirstStep(projId, stepId){
         
-        if (projIndex !== -1) {
-        this.projArr[projIndex].stepArr.splice(0,1);
-        console.log('this.projArr[projIndex].stepArr = ', this.projArr[projIndex].stepArr)
+    const proj = this.projModel.getProjById(projId);
+    
+    if (proj) {
+        const stepIndexInProj = proj.stepArr.findIndex(step => step.id === proj.stepId);
 
-        this.firstStepArr = this.projModel.getFirstStepArr();
-
-        this._commit(this.projArr, this.firstStepArr);
+        if(stepIndexInProj !== -1){
+            proj.stepArr.splice(stepIndexInProj, 1);
+            // 1. does updateProjectSteps need to be fixed in proj-model.js?
+            this.projModel.updateProjectSteps(projId, proj.stepArr);
         }
+    }
+
+    
+    this.projModel.deleteStepFromFirstStepArr(stepId);
+    this._commit();
     }
 }
 
-const instance = new TodoModel();
 
-export default instance;
+const todoModelInstance = new TodoModel();
+
+export default todoModelInstance;

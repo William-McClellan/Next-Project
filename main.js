@@ -1,22 +1,20 @@
 // todo
-import {TodoModel} from './model/todo-model.js';
+import todoModelInstance from './model/todo-model.js';
 import {TodoController} from './todo-list/todo-controller.js';
 import {TodoView} from './todo-list/todo-view.js';
 
 // proj
 import {ProjController} from './proj/proj-controller.js';
-import {ProjModel} from './model/proj-model.js';
+import projModelInstance from './model/proj-model.js';
 import {ProjView} from './proj/proj-view.js';
 
 // proj instances
-const projModel = new ProjModel();
-const projView = new ProjView(projModel);
-const projController = new ProjController(projModel,projView);
+const projView = new ProjView(projModelInstance);
+const projController = new ProjController(projModelInstance,projView);
 
 // todo instances
-const todoModel = new TodoModel(projModel);
-const todoView = new TodoView(todoModel);
-const todoController = new TodoController(todoModel,todoView);
+const todoView = new TodoView(todoModelInstance);
+const todoController = new TodoController(todoModelInstance,todoView);
 
 todoView.bindAddTodo(todoController.handleAddTodo);
 todoView.bindDeleteTodo(todoController.handleDeleteTodo);
@@ -29,28 +27,34 @@ projView.bindToggleComplete(projController.handleToggleComplete);
 projView.bindEditProject(projController.handleEditProject);
 
 
-const initialproj = projModel.getProjArr();
+const initialproj = projModelInstance.getProjArr();
 
 projView.displayProjList(initialproj, projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep);
+console.log("After displaying project list - initialproj:", initialproj);
 
-const initialtodo = todoModel.getTodoArr();
-const initialFirstStepArr = projModel.getFirstStepArr();
-todoView.displayTodoList(initialtodo, initialFirstStepArr);
 
-projModel.bindProjChanged(() => {
-    projView.displayProjList(projModel.getProjArr(), projController.handleAddStep, projController.handleDeleteStep)
-    todoView.displayTodoList(todoModel.getTodoArr(), projModel.getFirstStepArr());
-    localStorage.setItem("todoArr", JSON.stringify(todoModel.getTodoArr()))
-    localStorage.setItem("projArr", JSON.stringify(projModel.getProjArr()))
-    localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
-})
+const initialTodoArray = todoModelInstance.getTodoArr();
+const initialFirstStepArr = projModelInstance.getFirstStepArr();
 
-todoModel.bindTodoArrChanged((projArr, firstStepArr) => {
-    projView.displayProjList(projArr, projController.handleAddStep, projController.handleDeleteStep)
-    todoView.displayTodoList(todoModel.getTodoArr(), firstStepArr);
-    localStorage.setItem("todoArr", JSON.stringify(todoModel.getTodoArr()))
-    localStorage.setItem("projArr", JSON.stringify(projArr))
-    localStorage.setItem("firstStepArr", JSON.stringify(projModel.getFirstStepArr()))
+todoView.displayTodoList( todoController.handleDeleteFirstStep ,initialTodoArray, initialFirstStepArr);
+
+projModelInstance.bindProjChanged(() => {
+           console.log("Inside bindProjChanged - Before displayProjList");
+
+    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep)
+    console.log("Inside bindProjChanged - After displayProjList");
+
+        console.log("Inside bindProjChanged - Before displayTodoList");
+
+    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr());
+        console.log("Inside bindProjChanged - After displayTodoList");
+
+   })
+
+todoModelInstance.bindTodoArrChanged(() => {
+    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleEditStep, 
+    projController.handleDeleteStep)
+    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr());
 })
 
 

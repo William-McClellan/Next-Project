@@ -39,7 +39,7 @@ export class TodoView{
         this.todoTextInput.value = '';
     }
 
-    createFirstStepItems(step){
+    createFirstStepItem(handleDeleteFirstStep, step){
         const firststepItem = createElement('li', 'first-step-item');
         firststepItem.id = step.id;
 
@@ -57,37 +57,23 @@ export class TodoView{
         const firststepItemDeleteButton = createElement('button', ['delete-button', 'delete-first-step-button']);
         firststepItemDeleteButton.textContent = 'Delete';
 
-        this.addDeleteFirstStepButtonListener(firststepItemDeleteButton, step);
+        this.addDeleteFirstStepButtonListener( handleDeleteFirstStep, firststepItemDeleteButton, step);
 
-        this.appendFirstStepItemElements(firststepItem, firststepItemCheckbox, firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
+        firststepItem.append(firststepItemCheckbox, firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
 
         return firststepItem;
     }
     
 
-    appendFirstStepItemElements(
-        firststepItem,
-        firststepItemCheckbox,
-        firststepItemSpan,
-        firststepItemProjText,
-        firststepItemDeleteButton
-    ) {
-        firststepItem.append(
-            firststepItemCheckbox,
-            firststepItemSpan,
-            firststepItemProjText,
-            firststepItemDeleteButton
-        );
-    }
-
-    addDeleteFirstStepButtonListener(deleteButton, step){
+    addDeleteFirstStepButtonListener(handleDeleteFirstStep, deleteButton, step){
         deleteButton.addEventListener('click', (e) => {
             if(e.target.classList.contains('delete-first-step-button') && e.target.classList.contains('delete-button')){
                 e.preventDefault();
                 console.log('Delete first step button clicked');
                 console.log(e.target.parentElement)
                 const projId = step.projId;
-                this.model.deleteFirstStep(projId);
+                const stepId = step.id;
+                handleDeleteFirstStep(projId, stepId);
             }
         })
     }
@@ -126,31 +112,30 @@ export class TodoView{
         return todoListItem;
     }
 
-    displayTodoList(todoArr, firstStepArr){
+    displayTodoList(handleDeleteFirstStep, todoArr, firstStepArr){
 
         clearList(this.todoList);
         clearList(this.firstStepList);
         
-        if(firstStepArr.length > 0){
-            firstStepArr.forEach((step) => {
-            const firstStepItems = this.createFirstStepItems(step);
-            this.firstStepList.append(firstStepItems);
-        })
-            this.todoList.prepend(this.firstStepList);
-        }
-        
-        const bothArrsEmpty =  todoArr.length === 0 && firstStepArr.length === 0;
-
-        if(bothArrsEmpty){
+            
+        if(todoArr.length === 0 && firstStepArr.length === 0){
             this.createTodoListPlaceHolder();
          } else {
                 todoArr.forEach(todo => {
                 const todoListItem = this.createTodoListItem(todo);
-
                 this.todoList.append(todoListItem)
+                })
+            if(firstStepArr.length > 0){
+                firstStepArr.forEach((step) => {
+                const firstStepItem = this.createFirstStepItem(handleDeleteFirstStep, step);
+                this.firstStepList.append(firstStepItem);
+
             })
-       }
+        }
+            this.todoList.prepend(this.firstStepList);
+        }
     }
+
 
     get _todoText(){
         const _todoText = this.todoTextInput.value

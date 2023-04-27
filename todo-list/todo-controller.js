@@ -24,4 +24,7 @@ export class TodoController{
         this.model.editTodo(id, editText)
     }
 
+    handleDeleteFirstStep = (projId, stepId) =>{
+        this.model.deleteFirstStep(projId, stepId);
+    }
 }
