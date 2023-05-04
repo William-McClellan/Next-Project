@@ -15,5 +15,19 @@ export function createElement(tag, classNames = []) {
         return element;
     }   
 
+export function addEditTextListener(element, handler){
+        if(element && element.classList.contains('editable')){
+            element.addEventListener('click', event => {
+            event.stopPropagation(); 
+        });
+        
+        element.addEventListener('blur', event => {
+            let editText = event.target.textContent;
+            let id = event.target.parentElement.id;
+            handler(id, editText);
+        })
+        }
+    }
+
 
 

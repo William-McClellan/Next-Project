@@ -3,12 +3,23 @@ import { ProjModel } from "../model/proj-model.js";
 
     
 export class TodoView{
-    constructor(model){
+    constructor(rootElement ,model){
+        this.createElement = createElement;
+        this.clearList = clearList;
 
         this.model = model;
-        this.app = getElement('#root');       
+        this.app = rootElement;       
 
-        this.todoDiv = createElement('div','todoDiv')
+        this.todoDiv = createElement('div','todo-div')
+
+//         document.addEventListener('focusout', event => {
+//     if (!event.target.isContentEditable && event.target.type !== 'input') {
+//         if (document.activeElement) {
+//             document.activeElement.blur();
+//         }
+//     }
+// });
+
 
         this.todoList = createElement('ul', 'todo-list');
 
@@ -28,18 +39,16 @@ export class TodoView{
         this.todoDiv.append( this.title, this.form, this.todoList);
         this.app.append(this.todoDiv);
 
-        this._initEditTextListener();
-        this._editText = '';
-
         this.firstStepList = createElement('ul', 'first-step-list');
     }
-
 
     resetInput(){
         this.todoTextInput.value = '';
     }
 
-    createFirstStepItem(handleDeleteFirstStep, step){
+    createFirstStepItem(handleDeleteFirstStep, step, handleEditFirstStep){
+      if(step){
+      
         const firststepItem = createElement('li', 'first-step-item');
         firststepItem.id = step.id;
 
@@ -50,18 +59,20 @@ export class TodoView{
         const firststepItemProjText = createElement('span', 'project-text');
         firststepItemProjText.textContent = '# ' + step.projText;
 
-        const firststepItemCheckbox = createElement('input');
-        firststepItemCheckbox.type = 'checkbox';
-        firststepItemCheckbox.checked = step.complete;
+        // const firststepItemCheckbox = createElement('input');
+        // firststepItemCheckbox.type = 'checkbox';
+        // firststepItemCheckbox.checked = step.complete;
 
         const firststepItemDeleteButton = createElement('button', ['delete-button', 'delete-first-step-button']);
-        firststepItemDeleteButton.textContent = 'Delete';
+        firststepItemDeleteButton.textContent = 'Done';
 
         this.addDeleteFirstStepButtonListener( handleDeleteFirstStep, firststepItemDeleteButton, step);
+        this.addEditTextListener(firststepItemSpan, handleEditFirstStep);
 
-        firststepItem.append(firststepItemCheckbox, firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
-
+        firststepItem.append(firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
+       
         return firststepItem;
+      }
     }
     
 
@@ -84,14 +95,16 @@ export class TodoView{
         this.todoList.append(todoListPlaceholder)
     }
 
-    createTodoListItem(todo){
+    createTodoListItem(todo, handleEditTodo){
+        // console.log("🚀 ~ file: todo-view.js:85 ~ TodoView ~ createTodoListItem ~ handleEditTodo:", handleEditTodo)
         const todoListItem = createElement('li', 'todo-list-item')
-        todoListItem.id = todo.id
+        todoListItem.id = todo.id 
 
-        const completeCheckbox = createElement('input')
-        completeCheckbox.type = 'checkbox'
-        completeCheckbox.checked = todo.complete
-        todoListItem.append(completeCheckbox)
+        // CHECKBOX SERVES NO PURPOSE, MAY BRING BACK LATER
+        // const completeCheckbox = createElement('input')
+        // completeCheckbox.type = 'checkbox'
+        // completeCheckbox.checked = todo.complete
+        // todoListItem.append(completeCheckbox)
 
         const todoListItemSpan = createElement('span', 'editable');
         todoListItemSpan.contentEditable = true;
@@ -106,36 +119,57 @@ export class TodoView{
         }
 
         const deleteButton = createElement('button',['delete-todo-button', 'delete-button'])
-        deleteButton.textContent = 'Delete'
+        deleteButton.textContent = 'Done'
         todoListItem.append(deleteButton)
+
+        this.addEditTextListener(todoListItemSpan, handleEditTodo)
 
         return todoListItem;
     }
 
-    displayTodoList(handleDeleteFirstStep, todoArr, firstStepArr){
+    todoArrExistsAndPopulated(todoArr){
+        if(todoArr && todoArr.length > 0){
+            return true;
+        } else {
+            // // return console.log("🚀 ~ file: todo-view.js:116 ~ TodoView ~ todoArrExistsAndPopulated ~ todoArrExistsAndPopulated: FALSE")
+            return false;
+        }
+    }
+
+    firstStepArrExistsAndPopulated(firstStepArr){
+        if(firstStepArr && firstStepArr.length > 0){
+            return true;
+        } else {
+            // // return console.log("🚀 ~ file: todo-view.js:116 ~ TodoView ~ todoArrExistsAndPopulated ~ todoArrExistsAndPopulated: FALSE")
+            return false;
+        }
+    }
+
+    displayTodoList(handleDeleteFirstStep, todoArr, firstStepArr, handleEditTodo, handleEditFirstStep){
+    console.log("🚀 ~ file: todo-view.js:133 ~ TodoView ~ displayTodoList ~ firstStepArr:", firstStepArr)
 
         clearList(this.todoList);
         clearList(this.firstStepList);
         
-            
-        if(todoArr.length === 0 && firstStepArr.length === 0){
+        if(!this.todoArrExistsAndPopulated(todoArr) && !this.firstStepArrExistsAndPopulated(firstStepArr)){
+            console.log("🚀 ~ file: todo-view.js:144 ~ TodoView ~ displayTodoList ~ !this.todoArrExistsAndPopulated(todoArr) && !this.firstStepArrExistsAndPopulated(firstStepArr):", !this.todoArrExistsAndPopulated(todoArr) && !this.firstStepArrExistsAndPopulated(firstStepArr))
             this.createTodoListPlaceHolder();
          } else {
                 todoArr.forEach(todo => {
-                const todoListItem = this.createTodoListItem(todo);
+                const todoListItem = this.createTodoListItem(todo, handleEditTodo);
                 this.todoList.append(todoListItem)
                 })
-            if(firstStepArr.length > 0){
+            if(this.firstStepArrExistsAndPopulated(firstStepArr)){
+                console.log("🚀 ~ file: todo-view.js:149 ~ TodoView ~ firstStepArr.forEach ~ firstStepArr:", firstStepArr)
                 firstStepArr.forEach((step) => {
-                const firstStepItem = this.createFirstStepItem(handleDeleteFirstStep, step);
-                this.firstStepList.append(firstStepItem);
+                const firstStepItem = this.createFirstStepItem(handleDeleteFirstStep, step, handleEditFirstStep);
 
+                this.firstStepList.append(firstStepItem);
+                this.todoList.prepend(this.firstStepList);
             })
         }
-            this.todoList.prepend(this.firstStepList);
         }
     }
-
 
     get _todoText(){
         const _todoText = this.todoTextInput.value
@@ -156,8 +190,7 @@ export class TodoView{
     bindDeleteTodo(handler){
         this.todoList.addEventListener('click', event =>{
             if(event.target.className === "delete-todo-button delete-button"){
-                console.log('delete-todo-button clicked')
-                const id = parseInt(event.target.parentElement.id)
+                const id = event.target.parentElement.id
                 handler(id)    
             }
         })
@@ -173,22 +206,25 @@ export class TodoView{
         })
     }
 
-     _initEditTextListener(){
-        this.todoList.addEventListener('input', event =>{
-            if(event.target.className === 'editable'){
-                this._editText = event.target.innerText
-            }
+  addEditTextListener(element, handler){
+        // console.log("🚀 ~ file: todo-view.js:190 ~ TodoView ~ addEditTextListener ~ element:", element)
+        // console.log("🚀 ~ file: todo-view.js:190 ~ TodoView ~ addEditTextListener ~ handler:", handler)
+        if(element && element.classList.contains('editable')){
+            element.addEventListener('click', event => {
+            event.stopPropagation(); 
+        });
+        
+        element.addEventListener('blur', event => {
+            let editText = event.target.textContent;
+            let id = event.target.parentElement.id;
+            // // // // // // console.log("🚀 ~ file: proj-view.js:133 ~ ProjView ~ addEditTextListener ~ event.target.parentElement:", event.target.parentElement)
+            // // // // // // console.log("🚀 ~ file: proj-view.js:133 ~ ProjView ~ addEditTextListener ~ id:", id)
+            // // // // // // console.log("🚀 ~ file: proj-view.js:138 ~ ProjView ~ addEditTextListener ~ id, editText BEFORE HANDLER CALL:", id, editText)
+            handler(id, editText);
+            // // // // // // console.log("🚀 ~ file: proj-view.js:140 ~ ProjView ~ addEditTextListener ~ id, editText AFTER HANDLER CALL:", id, editText)
         })
+        }
     }
 
-    bindEditTodo(handler){
-        this.todoList.addEventListener('focusout', event =>{
-            if(this._editText){
-                const id = parseInt(event.target.parentElement.id)
-                handler(id, this._editText)
-                this._editText = ''
-            }
-        })
-    }
 }
 

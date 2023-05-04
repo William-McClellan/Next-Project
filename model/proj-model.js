@@ -4,12 +4,9 @@ export class ProjModel{
         this.firstStepArr = [];
         this.loadFromLocalStorage();
 
-        console.log("Before retrieving from localStorage - this.projArr:", this.projArr);
-    const storedProjArr = JSON.parse(localStorage.getItem("projArr"));
-    console.log("After retrieving from localStorage - storedProjArr:", storedProjArr);
-    
-        this.projChanged = () => {};
+        this.projChangedCallbacks = [];
 
+        this.projChanged = () => {};
     }
 
     loadFromLocalStorage(){
@@ -17,52 +14,41 @@ export class ProjModel{
         this.projArr = JSON.parse(localStorage.getItem("projArr")) || [];
         this.firstStepArr = JSON.parse(localStorage.getItem("firstStepArr")) || [];
         
-        console.log("After loading from localStorage - this.projArr:", this.projArr);
-        console.log("After loading from localStorage - this.firstStepArr:", this.firstStepArr);
 
     }
+
+    savetoLocalStorage(key, arrToSave){
+    localStorage.setItem(key, JSON.stringify(arrToSave));
+    }
+
 
 // PROJECT METHODS
     bindProjChanged(callback){
-            console.log("Binding callback to projChanged");
-
-        this.projChanged = () => callback();    
-
-                console.log("Executing callback in projChanged");
-
+            this.projChangedCallbacks.push(callback);
     }
     
-    _commit(){
-      console.log("Before this.projChanged() - this.projArr:", this.projArr);
-    this.projChanged();
-    console.log("After this.projChanged() - this.projArr:", this.projArr);
-
-    console.log("Before localStorage.setItem() - this.projArr:", this.projArr);
-    localStorage.setItem("projArr", JSON.stringify(this.projArr));
-    console.log("After localStorage.setItem() - this.projArr:", this.projArr);
-
-    console.log("Before localStorage.getItem() - this.projArr:", this.projArr);
-    const storedProjArr = JSON.parse(localStorage.getItem("projArr"));
-    console.log("After localStorage.getItem() - this.projArr:", this.projArr);
-    console.log("After localStorage.getItem() - storedProjArr:", storedProjArr);
-
-    localStorage.setItem("firstStepArr", JSON.stringify(this.firstStepArr));
-
-    };
+    render(){
+        this.projChangedCallbacks.forEach((callback) => callback());
+    }
 
     updateProjectSteps(projId, updatedSteps){
         const projIndex = this.projArr.findIndex(proj => proj.id === projId);
         if(projIndex !== -1){
             this.projArr[projIndex].stepArr = updatedSteps;
-            this._commit();
+            this.savetoLocalStorage('projArr', this.projArr)
+            // // console.log("🚀 ~ file: proj-model.js:39 ~ ProjModel ~ updateProjectSteps ~ this.projArr:", this.projArr)
+            this.render()
         }
     }
 
     deleteStepFromFirstStepArr(stepId){
         const stepIndex = this.firstStepArr.findIndex(step => step.id === stepId);
+        // // console.log("🚀 ~ file: proj-model.js:45 ~ ProjModel ~ deleteStepFromFirstStepArr ~ stepIndex:", stepIndex)
         if(stepIndex !== -1){
             this.firstStepArr.splice(stepIndex, 1);
-            this._commit();
+            this.savetoLocalStorage('firstStepArr', this.firstStepArr)
+            // // console.log("🚀 ~ file: proj-model.js:49 ~ ProjModel ~ deleteStepFromFirstStepArr ~ this.firstStepArr:", this.firstStepArr)
+            this.render()
         }
     }
 
@@ -71,30 +57,57 @@ export class ProjModel{
         return proj;
     }
 
+    getProjIdByStepId(stepId){
+        const proj = this.projArr.find(proj => proj.stepArr.find(step => step.id === stepId));
+        return proj.id;
+    }
+
+    stepArrExistsAndPopulated(proj){
+        if(proj.stepArr && proj.stepArr.length > 0){
+            return true;
+        } else {
+            console.log("🚀 ~ file: proj-model.js:71 ~ ProjModel ~ stepArrExistsAndPopulated ~ 'No steps yet':")
+            return false;
+        }
+    }
+        
+    projArrExistsAndPopulated(projArr){
+       if(projArr && projArr.length > 0){
+              return true;
+       } else {
+            
+           console.log("🚀 ~ file: proj-model.js:80 ~ ProjModel ~ projArrExistsAndPopulated ~ 'No projects yet':")
+                return false;
+         }
+    } 
+
     getFirstStepArr(){
+        console.log("🚀 ~ file: proj-model.js:71 ~ ProjModel ~ getFirstStepArr ~ getFirstStepArr CALLED")
         this.loadFromLocalStorage();
 
         this.firstStepArr = [];
 
-        if(this.projArr.length > 0){
+        if(this.projArrExistsAndPopulated(this.projArr)){
+            console.log("🚀 ~ file: proj-model.js:88 ~ ProjModel ~ getFirstStepArr ~ this.projArrExistsAndPopulated(this.projArr):", this.projArrExistsAndPopulated(this.projArr))
             this.projArr.forEach(proj => {
-                 if (proj.stepArr.length > 0) {
+                if(this.stepArrExistsAndPopulated(proj)) {
+                console.log("🚀 ~ file: proj-model.js:91 ~ ProjModel ~ getFirstStepArr ~ this.stepArrExistsAndPopulated:", this.stepArrExistsAndPopulated(proj))
 
                     const step = proj.stepArr[0];
 
                     const existingStep = this.firstStepArr.find(s => s.id === step.id);
+                    console.log("🚀 ~ file: proj-model.js:96 ~ ProjModel ~ getFirstStepArr ~ existingStep:", existingStep)
 
                     if (!existingStep) {
                         this.firstStepArr.push(step);
                     }   
                 }
-            })  
-
-        }
+        })
+        console.log("🚀 ~ file: proj-model.js:90 ~ ProjModel ~ getFirstStepArr ~ this.firstStepArr:", this.firstStepArr)
         return this.firstStepArr;
-    }
+        }
 
-    
+    }   
     
     addProject(projectText){
         const project = {
@@ -104,35 +117,55 @@ export class ProjModel{
             stepArr: [],
             dropDownButtonOn: false,
         }
-        this.projArr.push(project);
-        console.log("🚀 ~ file: proj-model.js:70 ~ ProjModel ~ addProject ~ this.projArr BEFORE COMMIT:", this.projArr)
+        // // // console.log("🚀 ~ file: proj-model.js:89 ~ ProjModel ~ addProject ~ id:", project.id)
         
-        this._commit();
-
-        console.log("🚀 ~ file: proj-model.js:77 ~ ProjModel ~ addProject ~ this.projArr AFTER COMMIT:", this.projArr)
+        this.projArr.push(project);
+        // // // console.log("🚀 ~ file: proj-model.js:96 ~ ProjModel ~ addProject ~ this.projArr:", this.projArr)
+        
+        this.savetoLocalStorage("projArr", this.projArr);
+        // // // console.log("🚀 ~ file: proj-model.js:99 ~ ProjModel ~ addProject ~ this.projArr:", this.projArr)
+        
+        // // // console.log("🚀 ~ file: proj-model.js:97 ~ ProjModel ~ addProject ~ this.projArr:", this.projArr)
+        this.render();
+        
     }
 
     deleteProject(id){
+        // // // console.log("🚀 ~ file: proj-model.js:100 ~ ProjModel ~ deleteProject ~ id:", id)
+        // // // console.log("🚀 ~ file: proj-model.js:101 ~ ProjModel ~ deleteProject ~ this.projArr BEFORE FILTER:", this.projArr)
+        
         this.projArr = this.projArr.filter(project => project.id !== id);
-        this._commit();
+        // // // console.log("🚀 ~ file: proj-model.js:101 ~ ProjModel ~ deleteProject ~ this.projArr AFTER FILTER:", this.projArr)
+        this.savetoLocalStorage("projArr", this.projArr)
+        // // // console.log("🚀 ~ file: proj-model.js:112 ~ ProjModel ~ deleteProject ~ this.projArr (this.savetoLocalStorage):", this.projArr)
+        this.render()
+        // // // console.log("🚀 ~ file: proj-model.js:110 ~ ProjModel ~ deleteProject ~ this.render():", this.projArr)
     }
 
     toggleComplete(id){
         this.projArr = this.projArr.map(
             proj => proj.id === id ? {text: proj.text, id: proj.id, complete: !proj.complete} : proj
             )
-
-        // this._commitToStorage(this.projArr)
-        this._commit();
+        // // console.log("🚀 ~ file: proj-model.js:122 ~ ProjModel ~ toggleComplete ~ this.projArr:", this.projArr)
+        this.savetoLocalStorage("projArr", this.projArr)
+        // // console.log("🚀 ~ file: proj-model.js:124 ~ ProjModel ~ toggleComplete ~ this.projArr:", this.projArr)
+        this.render()
     }
 
     editProject(id, editText){
+        // console.log("🚀 ~ file: proj-model.js:138 ~ ProjModel ~ editProject ~ id:", id)
         this.projArr = this.projArr.map(
-            project => project.id === id ? {text: editText, id: project.id, complete: project.complete} : project 
+            project => project.id === id ? {text: editText, id: project.id, complete: project.complete, stepArr: project.stepArr, dropDownButtonOn: project.dropDownButtonOn} : project
         )
+        // console.log("🚀 ~ file: proj-model.js:132 ~ ProjModel ~ editProject ~ this.projArr:", this.projArr)
+        this.savetoLocalStorage("projArr", this.projArr)
+        // console.log("🚀 ~ file: proj-model.js:AFTER SAVE ~ ProjModel ~ editProject ~ id:", id)
 
-        // this._commitToStorage(this.projArr)
-        this._commit();
+        // console.log("🚀 ~ file: proj-model.js:134 ~ ProjModel ~ editProject ~ this.projArr:", this.projArr)
+        this.render()
+
+        // console.log("🚀 ~ file: proj-model.js:AFTER RENDER ~ ProjModel ~ editProject ~ id:", id)
+
     }
 
     getProjArr(){
@@ -143,11 +176,8 @@ export class ProjModel{
 // STEP METHODS
     
     addStep(projId, stepText){
-        console.log("🚀 ~ file: proj-model.js:105 ~ ProjModel ~ addStep ~ projId:", projId)
         const projIndex = this.projArr.findIndex(proj => proj.id === projId);
         
-        console.log("🚀 ~ file: proj-model.js:106 ~ ProjModel ~ addStep ~ projIndex:", projIndex)
-        console.log("🚀 ~ file: proj-model.js:118 ~ ProjModel ~ addStep ~ this.projArr:", this.projArr)
         
         if(projIndex !== -1){
             const step = {
@@ -158,11 +188,10 @@ export class ProjModel{
             projId: this.projArr[projIndex].id,
         }
         this.projArr[projIndex].stepArr.push(step);
-        console.log("🚀 ~ file: proj-model.js:118 ~ ProjModel ~ addStep ~ this.projArr:", this.projArr)
-        console.log("🚀 ~ file: proj-model.js:118 ~ ProjModel ~ addStep ~ this.projArr[projIndex].stepArr:", this.projArr[projIndex].stepArr)
+        this.projArr[projIndex].dropDownButtonOn = true;
         
-        this._commit();
-        console.log("🚀 ~ file: proj-model.js:121 ~ ProjModel ~ addStep ~ this.projArr:", this.projArr)
+        this.savetoLocalStorage('projArr', this.projArr)
+        this.render()
         } 
     }
 
@@ -170,34 +199,34 @@ export class ProjModel{
 
     deleteStep(projId, stepId){
     const projIndex = this.projArr.findIndex(proj => proj.id === projId);
-    console.log("🚀 ~ file: proj-model.js:133 ~ ProjModel ~ deleteStep ~ projId:", projId)
-    console.log("🚀 ~ file: proj-model.js:133 ~ ProjModel ~ deleteStep this.projArr[projIndex].stepArr:", this.projArr[projIndex].stepArr)
 
         if (projIndex !== -1) {
          const stepIndex = this.projArr[projIndex].stepArr.findIndex(step => step.id === stepId);
-             console.log("🚀 ~ file: proj-model.js:138 ~ ProjModel ~ deleteStep ~ stepIndex:", stepIndex)
              if (stepIndex !== -1) {
              this.projArr[projIndex].stepArr.splice(stepIndex, 1);
-             console.log("🚀 ~ file: proj-model.js:144 ~ ProjModel ~ deleteStep this.projArr[projIndex].stepArr BEFORE COMMIT:", this.projArr[projIndex].stepArr)
             
-             this._commit();
-             console.log("🚀 ~ file: proj-model.js:144 ~ ProjModel ~ deleteStep this.projArr[projIndex].stepArr AFTER COMMIT:", this.projArr[projIndex].stepArr)
+             this.savetoLocalStorage('projArr', this.projArr)
+             this.render()
             } 
             else {
-                console.log("🚀 ~ file: proj-model.js: ~ deleteStep ~ step not found in this.projArr[projIndex].stepArr")
             }
         }
         else {
-            console.log("🚀 ~ file: proj-model.js: ~ deleteStep ~  proj not found in this.projArr")
         }
     }
 
-    editStep(id, editText){
-        this.projArr.stepArr = this.projArr.stepArr.map(
-            step => step.id === id ? {text: editText, id: step.id, complete: step.complete} : step 
-        )
+    editStep(id, editText, projIndex){
+        // console.log("🚀 ~ file: proj-model.js:201 ~ ProjModel ~ editStep ~ this.projArr[projIndex]:", this.projArr[projIndex])
+        const stepIndex = this.projArr[projIndex].stepArr.findIndex(step => step.id === id);
+        if(stepIndex !== -1){
+            this.projArr[projIndex].stepArr[stepIndex].text = editText;
+        }
+        // console.log("🚀 ~ file: proj-model.js:PRE-SAVE ~ ProjModel ~ editStep ~ this.projArr:", this.projArr)
+        this.savetoLocalStorage('projArr', this.projArr)
+        // console.log("🚀 ~ file: proj-model.js:POST-SAVE PRE-RENDER ~ ProjModel ~ editStep ~ this.projArr:", this.projArr)
+        this.render()
+        // console.log("🚀 ~ file: proj-model.js:POST-SAVE POST-RENDER ~ ProjModel ~ editStep ~ this.projArr:", this.projArr)
 
-        this._commit();
     }
 
     getStepArr(){

@@ -8,53 +8,56 @@ import {ProjController} from './proj/proj-controller.js';
 import projModelInstance from './model/proj-model.js';
 import {ProjView} from './proj/proj-view.js';
 
+const rootElement = document.getElementById('root');
+
+document.getElementById('root').addEventListener('click', function(event) {
+    event.stopPropagation();
+});
+
+
 // proj instances
-const projView = new ProjView(projModelInstance);
+const projView = new ProjView(rootElement, projModelInstance);
 const projController = new ProjController(projModelInstance,projView);
 
 // todo instances
-const todoView = new TodoView(todoModelInstance);
+const todoView = new TodoView(rootElement, todoModelInstance);
 const todoController = new TodoController(todoModelInstance,todoView);
 
 todoView.bindAddTodo(todoController.handleAddTodo);
 todoView.bindDeleteTodo(todoController.handleDeleteTodo);
 todoView.bindToggleComplete(todoController.handleToggleComplete);
-todoView.bindEditTodo(todoController.handleEditTodo);
 
 projView.addNewProjectListener(projController.handleAddProject);
 projView.bindDeleteProject(projController.handleDeleteProject);
 projView.bindToggleComplete(projController.handleToggleComplete);
-projView.bindEditProject(projController.handleEditProject);
 
 
 const initialproj = projModelInstance.getProjArr();
 
-projView.displayProjList(initialproj, projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep);
-console.log("After displaying project list - initialproj:", initialproj);
+projView.displayProjList(initialproj, projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep, projController.handleEditProject);
 
 
 const initialTodoArray = todoModelInstance.getTodoArr();
 const initialFirstStepArr = projModelInstance.getFirstStepArr();
 
-todoView.displayTodoList( todoController.handleDeleteFirstStep ,initialTodoArray, initialFirstStepArr);
+todoView.displayTodoList( todoController.handleDeleteFirstStep ,initialTodoArray, initialFirstStepArr, todoController.handleEditTodo, todoController.handleEditFirstStep);
 
 projModelInstance.bindProjChanged(() => {
-           console.log("Inside bindProjChanged - Before displayProjList");
 
-    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep)
-    console.log("Inside bindProjChanged - After displayProjList");
+    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleEditStep, projController.handleDeleteStep , projController.handleEditProject)
 
-        console.log("Inside bindProjChanged - Before displayTodoList");
 
-    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr());
-        console.log("Inside bindProjChanged - After displayTodoList");
+    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr(), todoController.handleEditTodo, todoController.handleEditFirstStep);
 
    })
-
+   
+//    console.log("🚀 ~ file: main.js:52 ~ todoModelInstance.bindTodoArrChanged ~ todoController.handleEditTodo:", todoController.handleEditTodo)
 todoModelInstance.bindTodoArrChanged(() => {
     projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleEditStep, 
-    projController.handleDeleteStep)
-    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr());
+    projController.handleDeleteStep, projController.handleEditProject)
+    
+    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr(), todoController.handleEditTodo, todoController.handleEditFirstStep);
+    // console.log("🚀 ~ file: main.js:53 ~ todoModelInstance.bindTodoArrChanged ~ todoController.handleEditTodo:", todoController.handleEditTodo)
 })
 
 

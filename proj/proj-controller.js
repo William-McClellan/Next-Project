@@ -22,10 +22,15 @@ export class ProjController{
     handleAddStep = (projId, stepText) => {
         this.model.addStep( projId, stepText);
     }
-    handleDeleteStep = (projId) =>{
-        this.model.deleteStep(projId);
+    handleDeleteStep = (projId, stepId) => {
+        console.log("🚀 ~ file: proj-controller.js:26 ~ ProjController ~ handleDeleteStep ~ projId, stepId:", projId, stepId)
+        this.model.deleteStep(projId, stepId);
     }
-    handleEditStep = (id, stepText) =>{
-        this.model.editStep(id, stepText);
+    handleEditStep = (id, editText) =>{
+        const projIndex = this.model.projArr.findIndex(proj => proj.stepArr.some(step => step.id === id));
+        // console.log("🚀 ~ file: proj-controller.js:30 ~ ProjController ~ projIndex:", projIndex)
+        if(projIndex !== -1){
+        this.model.editStep(id, editText, projIndex);
+        }
     }
 }

@@ -4,46 +4,49 @@
     box-sizing: border-box;
 }
 
-.proj-div{
-    display: flex;
-        flex-direction: column;
-        position: relative;
-    /* background-color: antiquewhite; */
-    width: 30rem;
-    padding-right: 7rem;
-}
-
-.todoDiv {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    flex: 1;
-    order: 2;
-    /* background-color: aquamarine; */
-    padding-left: 7rem;
-    padding-right: 3rem;
-    right: 7rem;
-}
-
 html {
     font-family: sans-serif;
     font-size: 1rem;
     color: #444;
 }
 
+body {
+margin: 0;
+padding: 0;
+}
+
 #root {
     display: flex;
     flex-direction: row;
     gap: 15rem;
-    /* max-width: 450px; */
-    /* margin: 2rem auto; */
-    /* padding: 0 1rem; */
 }
+
+.proj-div, .todo-div{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 30rem;
+}
+
+.proj-div {
+padding-right: 7rem;
+}
+
+.todo-div {
+    flex: 1;
+    order: 2;
+    padding-left: 7rem;
+    padding-right: 3rem;
+    right: 7rem;
+}
+
+
 
 form {
     display: flex;
     margin-bottom: 2rem;
 }
+
 [type='text'],
 .todo-input.proj-input {
     border: 2px solid lightblue;
@@ -61,7 +64,7 @@ form {
 }
 
 .new-step-input{
-    height: 2rem    ;
+    height: 2rem;
 }
 
 button {
@@ -99,13 +102,15 @@ ul {
 li{
     position: relative;
     display: flex;
-        flex-direction: row;
-        align-items: center;
-        background-color: aliceblue;
-        border: 2px solid lightblue;
-        border-radius: .4rem;
-        padding: .5rem;
+    flex-direction: row;
+    align-items: center;
+    background-color: aliceblue;
+    border: 2px solid lightblue;
+    border-radius: .4rem;
+    padding: .5rem;
+    width: 30rem;
 }
+
 .first-step-item{
     display: flex;
     flex-direction: row;
@@ -124,23 +129,20 @@ margin-bottom: .5rem;}
 
 
 
-.delete-button{
-  position: absolute;  
-  right: 0;
-  margin: 0;
+.delete-button,
+.delete-step-button{
+    position: absolute;  
+    right: 0;
     outline: 2px solid lightblue;
 }
 
 .delete-step-button{
-    position: absolute;
-    right: 0;
     top: 0;
-    
 }
+
 .proj-delete-button{
     margin-left: 4rem;
     height: 3rem;
-    outline: 2px solid lightblue;
 }
 
 .proj-list{
@@ -153,19 +155,15 @@ margin-bottom: .5rem;}
     align-items: center;
     background-color: aliceblue;
     border-radius: .4rem;
-    /* border: 4px solid lightblue; */
     box-shadow:
         0 0 3px 1px rgb(205, 233, 243),
-        /* top */
         0 0 3px 1px rgb(205, 233, 243),
-        /* right */
         0 0 3px 1px rgb(205, 233, 243),
-        /* bottom */
         0 0 3px 1px rgb(205, 233, 243);
-    /* left */
     font-size: larger;
     height: 3rem;
-margin-bottom: 1rem;}
+    margin-bottom: 1rem;
+}
 
 
 [type='text'] {
@@ -179,6 +177,9 @@ span,
     padding-left: 1.2rem;
     padding-right: 4rem;
     border-radius: .3rem;
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .step-item {
@@ -190,13 +191,14 @@ span,
     border-radius: .4rem;
     margin: .2rem;
 }
+
 .proj-list-item-span{
     display: inline-block;
     padding-left: 1rem;
     padding-right: 2rem;
 }
 
-li span:hover {
+li span:not(.project-text):hover {
     background: white;
     border: 2px solid lightblue;
     border-radius: .3rem;
@@ -219,11 +221,10 @@ li span:focus {
     width: 100%;
     height: 100%;
     margin-top: 1rem;
-/* margin-bottom: -3rem; */
 }
 
 .dropdown-button{
-margin-left: 2rem;
+    margin-left: 2rem;
     outline: 2px solid lightblue;
 }
 
@@ -231,7 +232,7 @@ margin-left: 2rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start; 
- justify-content: left ; 
+    justify-content: left ; 
     width: 100%;
     height: 100%;
     padding-right: 2rem;
