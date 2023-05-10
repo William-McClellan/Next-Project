@@ -6,6 +6,7 @@ export class ProjView{
         // PROJECT CONSTRUCTION
         this.getElement = getElement;
         this.createElement = createElement;
+        this.clearList = clearList;
         this.model = model;
         
         this.projDiv = createElement('div', 'proj-div')
@@ -38,14 +39,9 @@ export class ProjView{
     }
 
     
-    createProjListItem(proj, handleEditProject){
+    createProjListItem(proj){
         const projListItem = createElement('div', 'proj-list-item')
         projListItem.id = proj.id
-
-        // CHECKBOX SERVES NO PURPOSE, MAY BRING BACK LATER
-        // const completeCheckbox = createElement('input')
-        // completeCheckbox.type = 'checkbox'
-        // completeCheckbox.checked = proj.complete; 
 
         const projListItemSpan = createElement('span', ['editable', 'proj-list-item-span']);
         projListItemSpan.contentEditable = true;
@@ -67,17 +63,11 @@ export class ProjView{
 
         projListItem.append(strikeThrough, projListItemSpan, dropDownButton, deleteButton)
 
-        this.addEditTextListener(projListItemSpan, handleEditProject);
-        // // // // // // // console.log("🚀 ~ file: proj-view.js:71 ~ ProjView ~ createProjListItem ~ projListItemSpan:", projListItemSpan)
-        // // // // // // // console.log("🚀 ~ file: proj-view.js:71 ~ ProjView ~ createProjListItem ~ projListItemSpan:", projListItemSpan)
-
         return projListItem;
 
     }
     
     createDropDown(proj, handleAddStep){        
-        // DOM ELEMENTS                    
-
         const stepList = createElement('ol','step-list');
 
         const newStepInput =  createElement('input', 'new-step-input')
@@ -93,63 +83,41 @@ export class ProjView{
 
         dropDownDiv.append(stepForm, stepList);
 
-        // // // // // // // console.log("🚀 ~ file: proj-view.js:98 ~ ProjView ~ createDropDown ~ stepList:", stepList)
-        
         this.addNewStepListener(stepForm, handleAddStep, proj);
 
         return dropDownDiv;
-        }  
+    }  
     
-    createStepItem(handleDeleteStep, handleEditStep, step, proj, projArr){
+    createStepItem(handleDeleteStep, step, proj, projArr){
 
-                const stepItem = createElement('li', ['step-item', 'editable']);
-                const stepItemTextSpan = createElement('span', 'step-item-text-span');
-                stepItemTextSpan.contentEditable = true; 
-                // // // // // console.log("🚀 ~ file: proj-view.js:107 ~ ProjView ~ createStepItem ~ stepItemTextSpan:", stepItemTextSpan)
-                stepItemTextSpan.textContent = step.text;
-                stepItem.id = step.id;
+        const stepItem = createElement('li', ['step-item']);
+        const stepItemTextSpan = createElement('span', ['step-item-text-span','editable']);
+        stepItemTextSpan.contentEditable = true; 
+        stepItemTextSpan.textContent = step.text;
+        stepItem.id = step.id;
 
-    stepItemTextSpan.classList.add('editable'); // Add this line
+        const deleteStepButton = createElement('button', ['delete-step-button', 'delete-button']);
+        deleteStepButton.innerText = 'Done';
+        this.addDeleteStepListener(deleteStepButton, handleDeleteStep, proj, projArr);
 
-                
-                const deleteStepButton = createElement('button', ['delete-step-button', 'delete-button']);
-                deleteStepButton.innerText = 'Done';
-                this.addDeleteStepListener(deleteStepButton, handleDeleteStep, proj, projArr);
-                this.addEditTextListener(stepItemTextSpan, handleEditStep);
+        stepItem.append(stepItemTextSpan , deleteStepButton);
 
-                stepItem.append(stepItemTextSpan ,deleteStepButton);
-
-                return stepItem;
+        return stepItem;
     }
 
     addDeleteStepListener(deleteStepButton, handler, proj){
         deleteStepButton.addEventListener('click', event =>{
+            console.log("🚀 ~ file: proj-view.js:117 ~ ProjView ~ addDeleteStepListener ~ addEventListener:", addEventListener)
             if(event.target.classList.contains('delete-step-button')){
+            console.log("🚀 ~ file: proj-view.js:112 ~ ProjView ~ addDeleteStepListener ~ if(event.target.classList.contains('delete-step-button'):")
             const stepId = (event.target.parentElement.id);
+            console.log("🚀 ~ file: proj-view.js:114 ~ ProjView ~ addDeleteStepListener ~ stepId:", stepId)
             const projId = (proj.id);
+            console.log("🚀 ~ file: proj-view.js:116 ~ ProjView ~ addDeleteStepListener ~ projId:", projId)
             
             handler(projId, stepId);
             }
         })
-    }
-
-    addEditTextListener(element, handler){
-        if(element && element.classList.contains('editable')){
-        
-            element.addEventListener('click', event => {
-                event.stopPropagation(); // Add this line to stop event propagation
-            });
-            
-            element.addEventListener('blur', event => {
-                let editText = event.target.textContent;
-                let id = event.target.parentElement.id;
-                // // // // // console.log("🚀 ~ file: proj-view.js:133 ~ ProjView ~ addEditTextListener ~ event.target.parentElement:", event.target.parentElement)
-                // // // // // console.log("🚀 ~ file: proj-view.js:133 ~ ProjView ~ addEditTextListener ~ id:", id)
-                // // // // // console.log("🚀 ~ file: proj-view.js:138 ~ ProjView ~ addEditTextListener ~ id, editText BEFORE HANDLER CALL:", id, editText)
-                handler(id, editText);
-                // // // // // console.log("🚀 ~ file: proj-view.js:140 ~ ProjView ~ addEditTextListener ~ id, editText AFTER HANDLER CALL:", id, editText)
-            })
-        }
     }
 
     addNewStepListener(element, handler, proj){
@@ -165,17 +133,13 @@ export class ProjView{
     addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj){
         dropDownButton.addEventListener('click', event => {
         
-            // // // // // // console.log("🚀 ~ file: proj-view.js:170 ~ ProjView ~ addDropDownButtonListener ~ dropDownButton.addEventListener:", dropDownButton.addEventListener)
-        
             if(event.target.className === 'dropdown-button' && dropDownDiv.style.display === 'none' ){
                 dropDownDiv.style.display = 'block';
-                // // // // // // console.log("🚀 ~ file: proj-view.js:160 ~ ProjView ~ addDropDownButtonListener ~ dropDownDiv.style.display:", dropDownDiv.style.display)
                 proj.dropDownButtonOn = true;
                 newStepInput.focus();
             } 
                 else if (event.target.className === 'dropdown-button'){
                 dropDownDiv.style.display = 'none';
-                // // // // // // console.log("🚀 ~ file: proj-view.js:166 ~ ProjView ~ addDropDownButtonListener ~ dropDownDiv.style.display:", dropDownDiv.style.display)
                 proj.dropDownButtonOn = false;
                 }
         })
@@ -184,48 +148,41 @@ export class ProjView{
 
     initializeDropDownDisplay(dropDownProperty, dropDownDiv){
         if(dropDownProperty === false){
-          // // // // // // console.log("🚀 ~ file: proj-view.js:172 ~ ProjView ~ initializeDropDownDisplay ~ dropDownProperty === false:", dropDownProperty === false)
           dropDownDiv.style.display = 'none';
           }
     }
 
-
-
-    displayProjList(projArr, handleAddStep, handleEditStep, handleDeleteStep, handleEditProject){
-    // // // // // // console.log("🚀 ~ file: proj-view.js:183 ~ ProjView ~ displayProjList ~ displayProjList START:")
+    displayProjList(projArr, handleAddStep, handleDeleteStep){
     
-    clearList(this.projList);
+        clearList(this.projList);
     
     
         projArr.forEach(proj => {
-        
-            // // // // // // console.log("🚀 ~ file: proj-view.js:187 ~ ProjView ~ displayProjList ~ proj:", proj)
-            const projListItem = this.createProjListItem(proj, handleEditProject);
+            const projListItem = this.createProjListItem(proj);
             
-            const dropDownDiv = this.createDropDown(proj, handleAddStep, handleEditStep);
+            const dropDownDiv = this.createDropDown(proj, handleAddStep);
             const stepList = dropDownDiv.querySelector('.step-list');
             
             if(proj.stepArr){
                 
                 proj.stepArr.map((step) => {
-            const stepItem = this.createStepItem(handleDeleteStep, handleEditStep, step, proj, projArr);
-            stepList.append(stepItem);
-            })
-            
-            const dropDownButton = projListItem.querySelector('.dropdown-button');
-            
-            const stepForm = dropDownDiv.querySelector('.step-form');
+                    const stepItem = this.createStepItem(handleDeleteStep, step, proj, projArr);
+                    stepList.append(stepItem);
+                })
+                
+                const dropDownButton = projListItem.querySelector('.dropdown-button');
+                
+                const stepForm = dropDownDiv.querySelector('.step-form');
 
-            const newStepInput = stepForm.querySelector('.new-step-input');
+                const newStepInput = stepForm.querySelector('.new-step-input');
 
-            this.initializeDropDownDisplay(proj.dropDownButtonOn, dropDownDiv)
-            this.addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj)
-            
-            dropDownDiv.append(stepList);
-        }
-        this.projList.append(projListItem, dropDownDiv);
+                this.initializeDropDownDisplay(proj.dropDownButtonOn, dropDownDiv)
+                this.addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj)
+                
+                dropDownDiv.append(stepList);
+            }
+            this.projList.append(projListItem, dropDownDiv);
         })
-        // // // // // // console.log("🚀 ~ file: proj-view.js:183 ~ ProjView ~ displayProjList ~ displayProjList END:")
     }
            
      get _projText(){
@@ -248,10 +205,7 @@ export class ProjView{
         this.projList.addEventListener('click', event =>{
             if(event.target.className === 'proj-delete-button'){
                 const id = event.target.parentElement.id
-                // // // // // // // console.log("🚀 ~ file: proj-view.js:225 ~ ProjView ~ bindDeleteProject ~ event.target.parentElement:", event.target.parentElement)
-                // // // // // // // console.log("🚀 ~ file: proj-view.js:225 ~ ProjView ~ bindDeleteProject ~ id:", id)
                 handler(id)
-                // // // // // // // console.log("🚀 ~ file: proj-view.js:222 ~ ProjView ~ bindDeleteProject ~ bindDeleteProject:")
             }
         })
     }
