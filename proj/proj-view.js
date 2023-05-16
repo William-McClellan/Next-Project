@@ -38,30 +38,47 @@ export class ProjView{
         this.projTextInput.value = '';
     }
 
-    
-    createProjListItem(proj){
+        setTextareaToSavedHeight(savedHeight, textarea){
+        if(savedHeight){
+            textarea.style.height = savedHeight;
+        }
+    }
+
+    resizeToScrollHeight(textarea, handleSaveHeight) {
+        textarea.style.height = 'auto'; 
+        textarea.style.height = textarea.scrollHeight + 'px'; 
+        console.log("🚀 ~ file: proj-view.js:50 ~ ProjView ~ resizeToScrollHeight ~ textarea.style.height:", textarea.style.height)
+        handleSaveHeight(textarea.id, textarea.style.height);
+    }
+
+   listenForInputThenResize(textarea, handleSaveHeight){
+       textarea.addEventListener('input', () => {
+         this.resizeToScrollHeight(textarea, handleSaveHeight);
+        });
+    }
+
+    createProjListItem(proj, handleGetHeight, handleSaveHeight){
         const projListItem = createElement('div', 'proj-list-item')
         projListItem.id = proj.id
 
-        const projListItemSpan = createElement('span', ['editable', 'proj-list-item-span']);
-        projListItemSpan.contentEditable = true;
-        projListItemSpan.textContent = proj.text;
+        const projListItemTextarea = createElement('textarea', ['editable', 'proj-list-item-text']);
+        projListItemTextarea.value = proj.text;
+        projListItemTextarea.id = proj.id;
+
+        this.setTextareaToSavedHeight(handleGetHeight(projListItemTextarea.id), projListItemTextarea);
+        this.listenForInputThenResize(projListItemTextarea, handleSaveHeight);
+
 
         const strikeThrough = createElement('s', 's')
-
-            if(proj.complete === true){
-                strikeThrough.textContent = proj.text
-            }   else {
-                projListItemSpan.textContent = proj.text
-            }
 
         const deleteButton = createElement('button', 'proj-delete-button')
         deleteButton.textContent = 'Done'
 
         const dropDownButton = createElement('button', 'dropdown-button');
-        dropDownButton.textContent = 'Steps';
+        dropDownButton.innerHTML = 'Steps <span class="arrow">&darr;</span>';
 
-        projListItem.append(strikeThrough, projListItemSpan, dropDownButton, deleteButton)
+
+        projListItem.append(strikeThrough, projListItemTextarea, dropDownButton, deleteButton)
 
         return projListItem;
 
@@ -72,7 +89,7 @@ export class ProjView{
 
         const newStepInput =  createElement('input', 'new-step-input')
         newStepInput.type = 'text';
-        newStepInput.placeholder = 'small + precise = easy';
+        newStepInput.placeholder = 'add project steps here';
 
         const stepForm = createElement('form', 'step-form');
 
@@ -83,24 +100,29 @@ export class ProjView{
 
         dropDownDiv.append(stepForm, stepList);
 
+        this.initializeDropDownDisplay(proj.dropDownButtonOn, dropDownDiv)
+
         this.addNewStepListener(stepForm, handleAddStep, proj);
 
         return dropDownDiv;
     }  
     
-    createStepItem(handleDeleteStep, step, proj, projArr){
+    createStepItem(handleDeleteStep, step, proj, projArr, handleGetHeight, handleSaveHeight){
 
         const stepItem = createElement('li', ['step-item']);
-        const stepItemTextSpan = createElement('span', ['step-item-text-span','editable']);
-        stepItemTextSpan.contentEditable = true; 
-        stepItemTextSpan.textContent = step.text;
         stepItem.id = step.id;
+        const stepItemTextarea = createElement('textarea', ['step-item-text','editable']);
+        stepItemTextarea.value = step.text;
+        stepItemTextarea.id = step.id;
+
+        this.setTextareaToSavedHeight(handleGetHeight(stepItemTextarea.id), stepItemTextarea);
+        this.listenForInputThenResize(stepItemTextarea, handleSaveHeight);
 
         const deleteStepButton = createElement('button', ['delete-step-button', 'delete-button']);
         deleteStepButton.innerText = 'Done';
         this.addDeleteStepListener(deleteStepButton, handleDeleteStep, proj, projArr);
 
-        stepItem.append(stepItemTextSpan , deleteStepButton);
+        stepItem.append(stepItemTextarea , deleteStepButton);
 
         return stepItem;
     }
@@ -130,35 +152,45 @@ export class ProjView{
 
     }
 
-    addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj){
-        dropDownButton.addEventListener('click', event => {
-        
-            if(event.target.className === 'dropdown-button' && dropDownDiv.style.display === 'none' ){
-                dropDownDiv.style.display = 'block';
-                proj.dropDownButtonOn = true;
-                newStepInput.focus();
-            } 
-                else if (event.target.className === 'dropdown-button'){
-                dropDownDiv.style.display = 'none';
-                proj.dropDownButtonOn = false;
-                }
-        })
-        
-    }
-
     initializeDropDownDisplay(dropDownProperty, dropDownDiv){
         if(dropDownProperty === false){
           dropDownDiv.style.display = 'none';
           }
     }
 
-    displayProjList(projArr, handleAddStep, handleDeleteStep){
+    
+
+    addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj, handleUpdateProjectDropDownProperty){
+        dropDownButton.addEventListener('click', event => {
+        
+            if(event.target.className === 'dropdown-button' && proj.dropDownButtonOn === false ){
+                dropDownDiv.style.display = 'flex';
+                proj.dropDownButtonOn = true;
+                newStepInput.focus();
+                handleUpdateProjectDropDownProperty(proj.id, proj.dropDownButtonOn);
+            } 
+                else if (event.target.className === 'dropdown-button'){
+                dropDownDiv.style.display = 'none';
+                proj.dropDownButtonOn = false;
+                handleUpdateProjectDropDownProperty(proj.id, proj.dropDownButtonOn);
+                }
+        })
+        
+    }
+
+    displayProjList({
+        projArr,
+        handleAddStep,
+        handleDeleteStep,
+        handleGetHeight,
+        handleSaveHeight, 
+        handleUpdateProjectDropDownProperty
+    }){
     
         clearList(this.projList);
-    
-    
+
         projArr.forEach(proj => {
-            const projListItem = this.createProjListItem(proj);
+            const projListItem = this.createProjListItem(proj, handleGetHeight, handleSaveHeight);
             
             const dropDownDiv = this.createDropDown(proj, handleAddStep);
             const stepList = dropDownDiv.querySelector('.step-list');
@@ -166,7 +198,7 @@ export class ProjView{
             if(proj.stepArr){
                 
                 proj.stepArr.map((step) => {
-                    const stepItem = this.createStepItem(handleDeleteStep, step, proj, projArr);
+                    const stepItem = this.createStepItem(handleDeleteStep, step, proj, projArr, handleGetHeight, handleSaveHeight);
                     stepList.append(stepItem);
                 })
                 
@@ -176,13 +208,14 @@ export class ProjView{
 
                 const newStepInput = stepForm.querySelector('.new-step-input');
 
-                this.initializeDropDownDisplay(proj.dropDownButtonOn, dropDownDiv)
-                this.addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj)
+                // this.initializeDropDownDisplay(proj.dropDownButtonOn, dropDownDiv)
+                this.addDropDownButtonListener(dropDownButton, dropDownDiv, newStepInput, proj, handleUpdateProjectDropDownProperty)
                 
                 dropDownDiv.append(stepList);
             }
             this.projList.append(projListItem, dropDownDiv);
         })
+        console.log("🚀 ~ file: proj-view.js:180 ~ ProjView ~ displayProjList ~ projArr:", projArr)
     }
            
      get _projText(){
@@ -218,6 +251,8 @@ export class ProjView{
             }
         })
     }
+
+
 
 }
 

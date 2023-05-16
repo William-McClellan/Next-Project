@@ -12,15 +12,22 @@ export class TodoController{
             event.stopPropagation(); 
     })
     }
+      
+    handleSaveHeight = (id, height) => {
+        this.model.saveTextareaHeight(id, height);
+    }
+
+    handleGetHeight = (id) =>{
+        return this.model.getTextareaHeight(id);
+    }
 
      handleFocusOut(event) {
         console.log("handleFocusOut event triggered");
         const targetElement = event.target;
 
         if (targetElement.classList.contains('editable')) {
-            let editText = targetElement.textContent;
+            let editText = targetElement.value;
             let id = targetElement.parentElement.id;
-
             if (targetElement.parentElement.classList.contains('todo-list-item')) {
                 this.model.editTodo(id, editText);
             }
@@ -36,7 +43,6 @@ export class TodoController{
     addFocusOutListener() {
         document.getElementById('root').addEventListener('focusout', this.handleFocusOut.bind(this));
     }
-
 
     todoChanged = (todoArr) =>{
         view.displayTodoList(todoArr)

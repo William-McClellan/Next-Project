@@ -30,41 +30,74 @@ projView.bindToggleComplete(projController.handleToggleComplete);
 projController.addFocusOutListener();
 
 
-const initialproj = projModelInstance.getProjArr();
+const initialProj = projModelInstance.getProjArr();
+console.log("🚀 ~ file: main.js:38 ~ initialProj:", initialProj)
 
-projView.displayProjList(initialproj, projController.handleAddStep, projController.handleDeleteStep, projController.handleEditProject);
+// display initial projects
+projView.displayProjList({
+    projArr: initialProj,
+    handleAddStep: projController.handleAddStep,
+    handleDeleteStep: projController.handleDeleteStep,
+    handleEditProject: projController.handleEditProject,
+    handleGetHeight: projController.handleGetHeight,
+    handleSaveHeight: projController.handleSaveHeight,
+    handleUpdateProjectDropDownProperty: projController.handleUpdateProjectDropDownProperty,
+});
 
 
 const initialTodoArray = todoModelInstance.getTodoArr();
 const initialFirstStepArr = projModelInstance.getFirstStepArr();
 
-todoView.displayTodoList( todoController.handleDeleteFirstStep ,initialTodoArray, initialFirstStepArr, todoController.handleEditTodo, todoController.handleEditFirstStep);
+// display initial todos
+todoView.displayTodoList({
+    handleDeleteFirstStep: todoController.handleDeleteFirstStep,
+    todoArr: initialTodoArray,
+    firstStepArr: initialFirstStepArr,
+    handleGetHeight: todoController.handleGetHeight,
+    handleSaveHeight: todoController.handleSaveHeight
+});
+
+const bindProjChangedArgs = {
+    projArr: projModelInstance.getProjArr(),
+    handleAddStep: projController.handleAddStep,
+    handleDeleteStep: projController.handleDeleteStep,
+    handleGetHeight: projController.handleGetHeight,
+    handleSaveHeight: projController.handleSaveHeight,
+    handleUpdateProjectDropDownProperty: projController.handleUpdateProjectDropDownProperty,
+}
+
+const bindTodoChangedArgs = { 
+    handleDeleteFirstStep: todoController.handleDeleteFirstStep,
+    todoArr: todoModelInstance.getTodoArr(),
+    firstStepArr: projModelInstance.getFirstStepArr(),
+    handleGetHeight: todoController.handleGetHeight,
+    handleSaveHeight: todoController.handleSaveHeight
+}
 
 projModelInstance.bindProjChanged(() => {
-
-    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, projController.handleDeleteStep , projController.handleEditProject)
-
-
-    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr(), todoController.handleEditTodo, todoController.handleEditFirstStep);
-
-   })
-   
-//    console.log("🚀 ~ file: main.js:52 ~ todoModelInstance.bindTodoArrChanged ~ todoController.handleEditTodo:", todoController.handleEditTodo)
-todoModelInstance.bindTodoArrChanged(() => {
-    projView.displayProjList(projModelInstance.getProjArr(), projController.handleAddStep, 
-    projController.handleDeleteStep, projController.handleEditProject)
+    // get latest arrays
+    bindProjChangedArgs.projArr = projModelInstance.getProjArr();
+    console.log("🚀 ~ file: main.js:73 ~ projModelInstance.bindProjChanged ~ bindProjChangedArgs.projArr:", bindProjChangedArgs.projArr)
     
-    todoView.displayTodoList(todoController.handleDeleteFirstStep, todoModelInstance.getTodoArr(), projModelInstance.getFirstStepArr(), todoController.handleEditTodo, todoController.handleEditFirstStep);
-    // console.log("🚀 ~ file: main.js:53 ~ todoModelInstance.bindTodoArrChanged ~ todoController.handleEditTodo:", todoController.handleEditTodo)
+    projView.displayProjList(bindProjChangedArgs)
+
+    // get latest arrays
+    bindTodoChangedArgs.todoArr = todoModelInstance.getTodoArr();
+    bindTodoChangedArgs.firstStepArr = projModelInstance.getFirstStepArr();
+
+    todoView.displayTodoList(bindTodoChangedArgs);
+    console.log("🚀 ~ file: main.js:88 ~ projModelInstance.bindProjChanged ~ bindProjChanged:")
 })
-
-
-
-
-
-
-
-
-        
+   
+todoModelInstance.bindTodoArrChanged(() => {
+        // get latest arrays
+    bindProjChangedArgs.projArr = projModelInstance.getProjArr();
     
+    projView.displayProjList(bindProjChangedArgs)
 
+    // get latest arrays
+    bindTodoChangedArgs.todoArr = todoModelInstance.getTodoArr();
+    bindTodoChangedArgs.firstStepArr = projModelInstance.getFirstStepArr();
+
+    todoView.displayTodoList(bindTodoChangedArgs);
+})

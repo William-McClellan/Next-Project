@@ -1,14 +1,15 @@
-import { createElement, clearList} from "../utils.js";
+import { createElement, clearList, truncateString} from "../utils.js";
 import { ProjModel } from "../model/proj-model.js";
 
     
 export class TodoView{
-    constructor(rootElement ,model){
+    constructor(rootElement , model, controller = null){
         this.createElement = createElement;
         this.clearList = clearList;
 
         this.model = model;
-        this.app = rootElement;       
+        this.app = rootElement;   
+        this.controller = controller;    
 
         this.todoDiv = createElement('div','todo-div')
 
@@ -37,15 +38,22 @@ export class TodoView{
         this.todoTextInput.value = '';
     }
 
-    createFirstStepItem(handleDeleteFirstStep, step){
+    setTextareaToSavedHeight(savedHeight, textarea){
+        if(savedHeight){
+            textarea.style.height = savedHeight;
+        }
+    }
+
+    createFirstStepItem(handleDeleteFirstStep, step, handleGetHeight, handleSaveHeight){
       if(step){
       
         const firststepItem = createElement('li', 'first-step-item');
         firststepItem.id = step.id;
 
-        const firststepItemSpan = createElement('span', 'editable', 'first-step-item');
-        firststepItemSpan.contentEditable = true;
-        firststepItemSpan.textContent = step.text;
+        const firststepItemTextarea = createElement('textarea', ['editable', 'first-step-item-text']);
+        firststepItemTextarea.value = step.text;
+        this.setTextareaToSavedHeight(handleGetHeight(step.id), firststepItemTextarea);
+        this.listenForInputThenResize(firststepItemTextarea, handleSaveHeight);
 
         const firststepItemProjText = createElement('span', 'project-text');
         firststepItemProjText.textContent = '# ' + step.projText;
@@ -55,12 +63,13 @@ export class TodoView{
 
         this.addDeleteFirstStepButtonListener( handleDeleteFirstStep, firststepItemDeleteButton, step);
 
-        firststepItem.append(firststepItemSpan, firststepItemProjText, firststepItemDeleteButton);
+        firststepItem.append(firststepItemTextarea, firststepItemProjText, firststepItemDeleteButton);
        
         return firststepItem;
       }
     }
     
+
 
     addDeleteFirstStepButtonListener(handleDeleteFirstStep, deleteButton, step){
         deleteButton.addEventListener('click', (e) => {
@@ -75,27 +84,37 @@ export class TodoView{
         })
     }
 
+    resizeToScrollHeight(textarea, handleSaveHeight) {
+        textarea.style.height = 'auto'; 
+        textarea.style.height = textarea.scrollHeight + 'px'; 
+        handleSaveHeight(textarea.id, textarea.style.height);
+    }
+
+   listenForInputThenResize(textarea, handleSaveHeight){
+       textarea.addEventListener('input', () => {
+         this.resizeToScrollHeight(textarea, handleSaveHeight);
+        });
+    }
+    
     createTodoListPlaceHolder(){
         const todoListPlaceholder = createElement('p')
         todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
         this.todoList.append(todoListPlaceholder)
     }
 
-    createTodoListItem(todo){
+    createTodoListItem(todo, handleGetHeight, handleSaveHeight){
         const todoListItem = createElement('li', 'todo-list-item')
         todoListItem.id = todo.id 
 
-        const todoListItemSpan = createElement('span', 'editable');
-        todoListItemSpan.contentEditable = true;
+        const todoListItemTextarea = createElement('textarea', ['editable', 'todo-list-item-text']);
+        todoListItemTextarea.value = todo.text;
+        todoListItemTextarea.id = todo.id;
 
-        if(todo.complete === true){
-            const strikeThrough = createElement('s', 's')
-            strikeThrough.textContent = todo.text
-            todoListItem.append(strikeThrough)
-        }   else {
-            todoListItemSpan.textContent = todo.text
-            todoListItem.append(todoListItemSpan)
-        }
+        this.setTextareaToSavedHeight(handleGetHeight(todoListItemTextarea.id), todoListItemTextarea);
+        this.listenForInputThenResize(todoListItemTextarea, handleSaveHeight);
+
+        todoListItemTextarea.textContent = todo.text
+        todoListItem.append(todoListItemTextarea)
 
         const deleteButton = createElement('button',['delete-todo-button', 'delete-button'])
         deleteButton.textContent = 'Done'
@@ -104,6 +123,9 @@ export class TodoView{
 
         return todoListItem;
     }
+
+   
+
 
     todoArrExistsAndPopulated(todoArr){
         if(todoArr && todoArr.length > 0){
@@ -121,7 +143,13 @@ export class TodoView{
         }
     }
 
-    displayTodoList(handleDeleteFirstStep, todoArr, firstStepArr){
+    displayTodoList({
+        handleDeleteFirstStep,
+        todoArr,
+        firstStepArr,
+        handleGetHeight,
+        handleSaveHeight
+    }){
 
         clearList(this.todoList);
         clearList(this.firstStepList);
@@ -130,12 +158,12 @@ export class TodoView{
             this.createTodoListPlaceHolder();
          } else {
                 todoArr.forEach(todo => {
-                const todoListItem = this.createTodoListItem(todo);
+                const todoListItem = this.createTodoListItem(todo, handleGetHeight, handleSaveHeight);
                 this.todoList.append(todoListItem)
                 })
             if(this.firstStepArrExistsAndPopulated(firstStepArr)){
                 firstStepArr.forEach((step) => {
-                const firstStepItem = this.createFirstStepItem(handleDeleteFirstStep, step);
+                const firstStepItem = this.createFirstStepItem(handleDeleteFirstStep, step, handleGetHeight, handleSaveHeight);
 
                 this.firstStepList.append(firstStepItem);
                 this.todoList.prepend(this.firstStepList);
@@ -180,4 +208,5 @@ export class TodoView{
     }
 
 }
+
 
