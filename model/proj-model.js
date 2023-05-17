@@ -5,24 +5,18 @@ export class ProjModel{
         this.projArr = [];
         this.firstStepArr = [];
         this.loadFromLocalStorage();
-
         this.projChanged = () => {};
     }
 
     loadFromLocalStorage(){
-        
         this.projArr = JSON.parse(localStorage.getItem("projArr")) || [];
         this.firstStepArr = JSON.parse(localStorage.getItem("firstStepArr")) || [];
-        
-
     }
 
     savetoLocalStorage(key, arrToSave){
     localStorage.setItem(key, JSON.stringify(arrToSave));
     }
 
-
-// PROJECT METHODS
     bindProjChanged(callback){
             this.projChanged = () => callback();
     }
@@ -157,8 +151,6 @@ export class ProjModel{
         this.savetoLocalStorage("projArr", this.projArr)
 
         this.render()
-
-
     }
 
     updateProjectDropDownProperty(projId, dropDownButtonOn){
@@ -178,7 +170,6 @@ export class ProjModel{
     }
 
 // STEP METHODS
-    
     addStep(projId, stepText){
         const projIndex = this.projArr.findIndex(proj => proj.id === projId);
         
@@ -200,9 +191,6 @@ export class ProjModel{
         this.render()
         } 
     }
-
-    
-    
 
     deleteStep(projId, stepId){
     const projIndex = this.projArr.findIndex(proj => proj.id === projId);

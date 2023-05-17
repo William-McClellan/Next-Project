@@ -6,9 +6,6 @@ export class TodoModel{
         
         this.todoArrChanged = () => {};
     }
-
-
- 
    
     bindTodoArrChanged(callback){
         this.todoArrChanged = () => callback();    
@@ -29,7 +26,6 @@ export class TodoModel{
         this._commit()
     }
  
-    
     deleteTodo(id){
         const newTodoArr = this.todoArr.filter(todo => todo.id !== id);
         this.todoArr = newTodoArr;
@@ -45,21 +41,15 @@ export class TodoModel{
     }
 
     editTodo(id, editText){
-        // // // console.log("🚀 ~ file: todo-model.js:46 ~ TodoModel ~ editTodo TRIGGERED")
         const todoIndex = this.todoArr.findIndex(todo => todo.id === id);
         this.todoArr[todoIndex].text = editText;
-        // // // console.log("🚀 ~ file: todo-model.js:48 ~ TodoModel ~        this.todoArr[todoIndex]:",        this.todoArr[todoIndex])
         this._commit();
     }
 
     editFirstStep(id, editText, projId){    
-        // // // console.log("🚀 ~ file: todo-model.js:53 ~ TodoModel ~ editFirstStep ~ id:", id)
-        // // // console.log("🚀 ~ file: todo-model.js:53 ~ TodoModel ~ editFirstStep ~ projId:", projId)
         const proj = this.projModel.getProjById(projId);
-        // // // console.log("🚀 ~ file: todo-model.js:55 ~ TodoModel ~ editFirstStep ~ proj", proj)
         if (proj) {
             const stepIndexInProj = proj.stepArr.findIndex(step => step.id === id);
-            // // // console.log("🚀 ~ file: todo-model.js:58 ~ TodoModel ~ editFirstStep ~ stepIndexInProj", stepIndexInProj)
             if(stepIndexInProj !== -1){
                 proj.stepArr[stepIndexInProj].text = editText;
                 this.projModel.updateProjectSteps(projId, proj.stepArr);
@@ -74,18 +64,12 @@ export class TodoModel{
     }
 
     deleteFirstStep(projId, stepId){
-    // // // console.log("🚀 ~ file: todo-model.js:58 ~ TodoModel ~ deleteFirstStep ~ stepId:", stepId)
     const proj = this.projModel.getProjById(projId);
-            console.log(proj.stepArr.stepId)
 
-    // // // console.log("🚀 ~ file: todo-model.js:59 ~ TodoModel ~ deleteFirstStep ~ proj:", proj)
     if (proj) {
         const stepIndexInProj = proj.stepArr.findIndex(step => step.id === stepId);
-        // // // console.log("🚀 ~ file: todo-model.js:62 ~ TodoModel ~ deleteFirstStep ~ proj.stepArr:", proj.stepArr)
-        // // // console.log("🚀 ~ file: todo-model.js:62 ~ TodoModel ~ deleteFirstStep ~ stepIndexInProj:", stepIndexInProj)
         if(stepIndexInProj !== -1){
             proj.stepArr.splice(stepIndexInProj, 1);
-            console.log(proj.stepArr.stepId)
             this.projModel.updateProjectSteps(projId, proj.stepArr);
         }
     }
@@ -98,18 +82,14 @@ export class TodoModel{
     }
 
     getTextareaHeight(id) {
-        console.log("🚀 ~ file: todo-model.js:104 ~ TodoModel ~ getTextareaHeight ~ localStorage.getItem(`textareaHeight-${id}`:", localStorage.getItem(`textareaHeight-${id}`))
        const textareaHeight = localStorage.getItem(`textareaHeight-${id}`);
        if(textareaHeight === null){
             return 0;
        } 
-       // // console.log("🚀 ~ file: todo-model.js:104 ~ TodoModel ~ getTextareaHeight ~ textareaHeight:", textareaHeight)
         return textareaHeight; 
     }
 
 }
-
-
 
 const todoModelInstance = new TodoModel();
 

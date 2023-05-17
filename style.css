@@ -11,8 +11,8 @@ html {
 }
 
 body {
-margin: 0;
-padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #root {
@@ -29,8 +29,8 @@ padding: 0;
 }
 
 .proj-div {
-padding-right: 0rem;
-padding-left: 3rem;
+    padding-right: 0rem;
+    padding-left: 3rem;
 }
 
 .todo-div {
@@ -41,8 +41,9 @@ padding-left: 3rem;
     right: 7rem;
 }
 
-/* textarea{
-} */
+textarea{
+    padding: .5rem;
+}
 
 textarea:focus{
     outline: none;
@@ -78,11 +79,6 @@ form {
     outline: none !important;
     border: 2px solid lightblue;
     box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
-}
-
-.new-step-input{
-    height: 2rem;
-    margin-top: -3rem;
 }
 
 button {
@@ -167,6 +163,10 @@ li{
     top: 0;
 }
 
+.add-new-step-button{
+    height: auto;
+}
+
 
 .proj-list{
     margin-top: -1rem;
@@ -185,7 +185,6 @@ li{
     border: 1px solid lightgreen;
     width: 31rem;
 }
-
 
 [type='text'] {
     width: 100%;
@@ -223,7 +222,7 @@ li span:focus {
     justify-content: space-around;
     padding: 0 auto;
     width: 100%;
-    height: 100%;
+    height: fit-content;
 }
 
 .dropdown-button{
@@ -237,17 +236,17 @@ li span:focus {
     align-items: flex-start; 
     justify-content: left ; 
     width: 100%;
-    height: 100%;
+    height: fit-content;
     padding-right: 2rem;
-    margin-top: -6rem;
     margin-left: -2.5rem;
-    margin-bottom: -4rem;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
 }
 
 
 .project-text{
-padding-right: 1rem;
-padding-left: 2rem;
+    padding-right: 1rem;
+    padding-left: 2rem;
 }
 
 .proj-list-item-text,
@@ -260,7 +259,7 @@ padding-left: 2rem;
     border-radius: .3rem;
 }
 
-/* for color blink on text changes that stem from other elements */
+/* for color blink on text changes that stem from other elements    NOT YET ADDED*/
 @keyframes blink {
     0% {
         background-color: transparent;
@@ -281,11 +280,9 @@ padding-left: 2rem;
 
 .proj-list-item-text {
     display: inline-block;
-    padding-left: 1rem;
-    padding-right: 2rem;
     font-size: 25px;
-    height: 3rem;
     width: 20rem;
+
 }
 
 .arrow{
