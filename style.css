@@ -42,7 +42,7 @@ body {
 }
 
 textarea{
-    padding: .5rem;
+    padding: 1rem;
 }
 
 textarea:focus{
