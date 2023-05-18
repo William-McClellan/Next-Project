@@ -22,7 +22,6 @@ export class TodoController{
     }
 
      handleFocusOut(event) {
-        console.log("handleFocusOut event triggered");
         const targetElement = event.target;
 
         if (targetElement.classList.contains('editable')) {

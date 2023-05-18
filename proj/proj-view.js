@@ -177,7 +177,8 @@ export class ProjView{
             if(event.currentTarget.className === 'dropdown-button' && proj.dropDownButtonOn === false ){
                 dropDownDiv.style.display = 'flex';
                 proj.dropDownButtonOn = true;
-                newStepInput.focus();
+                console.log("🚀 ~ file: proj-view.js:181 ~ ProjView ~ addDropDownButtonListener ~ newStepInput:", newStepInput)
+                setTimeout(() => newStepInput.focus(), 0);
                 handleUpdateProjectDropDownProperty(proj.id, proj.dropDownButtonOn);
             } 
                 else if (event.target.className === 'dropdown-button'){

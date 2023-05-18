@@ -22,7 +22,6 @@ export class ProjModel{
     }
     
     render(){
-        console.log("🚀 ~ file: proj-model.js:29 ~ ProjModel ~ render ~ render:")
         this.projChanged();
     }
 
@@ -59,7 +58,6 @@ export class ProjModel{
         const proj = this.getProjById(projId);
         const newProjText = this.getProjTextById(projId);
         const truncatedProjText = truncateString(newProjText, 15);
-        console.log("🚀 ~ file: proj-model.js:68 ~ ProjModel ~ updateFirstStepProjText ~ truncatedProjText:", truncatedProjText)
         if(proj.stepArr[0]){
             proj.stepArr[0].projText = truncatedProjText;
         }
@@ -123,7 +121,6 @@ export class ProjModel{
         this.projArr.push(project);
         
         this.savetoLocalStorage("projArr", this.projArr);
-        console.log("🚀 ~ file: proj-model.js:112 ~ ProjModel ~ addProject ~ this.projArr:", this.projArr)
         
         this.render();
         
@@ -154,8 +151,6 @@ export class ProjModel{
     }
 
     updateProjectDropDownProperty(projId, dropDownButtonOn){
-        console.log("🚀 ~ file: proj-model.js:165 ~ ProjModel ~ updateProjectDropDownProperty ~ dropDownButtonOn:", dropDownButtonOn)
-        console.log("🚀 ~ file: proj-model.js:165 ~ ProjModel ~ updateProjectDropDownProperty ~ projId:", projId)
         const projIndex = this.projArr.findIndex(proj => proj.id === projId);
         if(projIndex !== -1){
             this.projArr[projIndex].dropDownButtonOn = dropDownButtonOn;

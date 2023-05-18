@@ -31,7 +31,6 @@ projController.addFocusOutListener();
 
 
 const initialProj = projModelInstance.getProjArr();
-console.log("🚀 ~ file: main.js:38 ~ initialProj:", initialProj)
 
 // display initial projects
 projView.displayProjList({
@@ -77,7 +76,6 @@ const bindTodoChangedArgs = {
 projModelInstance.bindProjChanged(() => {
     // get latest arrays
     bindProjChangedArgs.projArr = projModelInstance.getProjArr();
-    console.log("🚀 ~ file: main.js:73 ~ projModelInstance.bindProjChanged ~ bindProjChangedArgs.projArr:", bindProjChangedArgs.projArr)
     
     projView.displayProjList(bindProjChangedArgs)
 
@@ -86,7 +84,6 @@ projModelInstance.bindProjChanged(() => {
     bindTodoChangedArgs.firstStepArr = projModelInstance.getFirstStepArr();
 
     todoView.displayTodoList(bindTodoChangedArgs);
-    console.log("🚀 ~ file: main.js:88 ~ projModelInstance.bindProjChanged ~ bindProjChanged:")
 })
    
 todoModelInstance.bindTodoArrChanged(() => {
