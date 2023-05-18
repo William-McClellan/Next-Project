@@ -42,7 +42,8 @@ body {
 }
 
 textarea{
-    padding: 1rem;
+    padding: .5rem;
+    padding-bottom: 1rem;
 }
 
 textarea:focus{
@@ -282,8 +283,8 @@ li span:focus {
     display: inline-block;
     font-size: 25px;
     width: 20rem;
-
-}
+    padding-top: 1.5rem;
+    }
 
 .arrow{
     font-size: 30px;

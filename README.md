@@ -38,6 +38,8 @@ This project is inspired by the principles of the Getting Things Done methodolog
 
 - **Due dates:** Add a due date to a task or project and have items with due dates jump to the top of your Next Actions.
 
+- **Step Counter:** Know how many steps a project consists of at a glance, without toggling the dropdown menu.
+
 - **Project Resources:** This upcoming feature will allow you to attach resources to your projects for easy reference. This could be a link, a document, or a crucial phone number.
 
 - **Archive Access:** We are working on an Archive feature that will provide access to your completed projects and actions. This is great for retrieving valuable information or simply reflecting on what you've accomplished.
