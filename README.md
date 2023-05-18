@@ -20,11 +20,11 @@ Please note: This project is fully client-side, and doesn't require a special se
 
 ## Usage
 
-Project Next is designed to supercharge your productivity by utilizing principles from the Getting Things Done (GTD) methodology.
+Next Project is designed to supercharge your productivity by utilizing principles from the Getting Things Done (GTD) methodology.
 
 With a focus on breaking down complex projects into manageable, precise steps, this tool effectively transforms your workflow into an actionable docket of tasks. Rather than being overwhelmed by the enormity of a project, users can concentrate on executing individual tasks, leading to efficient project completion.
 
-With Project Next, your projects automatically generate a dynamic "Next Actions" list. This keeps your momentum going and ensures clarity on the task to tackle next.
+With Next Project, your projects automatically generate a dynamic "Next Actions" list. This keeps your momentum going and ensures clarity on the task to tackle next.
 
 ## Contributing
 
@@ -35,6 +35,8 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 This project is inspired by the principles of the Getting Things Done methodology as introduced by David Allen. Although this application employs the GTD approach, it is not officially affiliated with or endorsed by David Allen or the GTD brand.
 
 ## Roadmap
+
+- **Due dates:** Add a due date to a task or project and have items with due dates jump to the top of your Next Actions.
 
 - **Project Resources:** This upcoming feature will allow you to attach resources to your projects for easy reference. This could be a link, a document, or a crucial phone number.
 
