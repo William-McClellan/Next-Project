@@ -70,9 +70,13 @@ form {
     border: 2px solid lightblue;
     color: gray;
     height: 3rem;
-    width: 6rem;
+    width: 25rem;
     border-radius: .3rem;
     font-size: large;
+}
+
+.new-step-input{
+    width: 15rem;
 }
 
 .input:focus, :focus-visible {
@@ -184,10 +188,6 @@ li{
     margin-bottom: 1rem;
     border: 1px solid lightgreen;
     width: 31rem;
-}
-
-[type='text'] {
-    width: 100%;
 }
 
 .step-item {

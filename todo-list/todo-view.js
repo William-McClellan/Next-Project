@@ -97,7 +97,7 @@ export class TodoView{
     
     createTodoListPlaceHolder(){
         const todoListPlaceholder = createElement('p')
-        todoListPlaceholder.textContent = 'Nothing left to do! Go to proj for more actions.'
+        todoListPlaceholder.textContent = 'Nothing left to do! Add steps to a project to create more next actions, or add small todos yourself.'
         this.todoList.append(todoListPlaceholder)
     }
 
