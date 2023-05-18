@@ -22,7 +22,7 @@ export class ProjView{
 
         this.projTextInput = createElement('input','proj-input');
         this.projTextInput.type = 'text';
-        this.projTextInput.placeholder = 'Add a new project';
+        this.projTextInput.placeholder = 'A multi-step task is a project.';
 
         this.addProjButton = createElement('button', 'add-proj-button');
         this.addProjButton.textContent = 'Add';
@@ -102,7 +102,7 @@ export class ProjView{
 
         const newStepInput =  createElement('input', 'new-step-input')
         newStepInput.type = 'text';
-        newStepInput.placeholder = 'add project steps here';
+        newStepInput.placeholder = 'Small + precise = actionable';
 
         const addNewStepButton = createElement('button', 'add-new-step-button')
         addNewStepButton.textContent = 'Add';
