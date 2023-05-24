@@ -10,42 +10,91 @@ html {
     color: #444;
 }
 
-#root {
-    max-width: 450px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+body {
+    margin: 0;
+    padding: 0;
 }
+
+#root {
+    display: flex;
+    flex-direction: row;
+    gap: 15rem;
+}
+
+.proj-div, .todo-div{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 30rem;
+}
+
+.proj-div {
+    padding-right: 0rem;
+    padding-left: 3rem;
+}
+
+.todo-div {
+    flex: 1;
+    order: 2;
+    padding-left: 7rem;
+    padding-right: 3rem;
+    right: 7rem;
+}
+
+textarea{
+    padding: .5rem;
+    padding-bottom: 1rem;
+}
+
+textarea:focus{
+    outline: none;
+    box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
+}
+
+textarea::-webkit-scrollbar {
+    width: .5rem;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: lightblue;
+    border-radius: 3px;
+}
+
 
 form {
     display: flex;
     margin-bottom: 2rem;
 }
 
-.todoInput {
+[type='text'],
+.todo-input.proj-input {
     border: 2px solid lightblue;
     color: gray;
+    height: 3rem;
+    width: 25rem;
+    border-radius: .3rem;
+    font-size: large;
 }
 
-.todoInput:focus {
-    box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
+.new-step-input{
+    width: 15rem;
+}
+
+.input:focus, :focus-visible {
+    outline: none !important;
     border: 2px solid lightblue;
-    outline: none;
+    box-shadow: 3px 4px 3px rgba(1, 1, 1, .15);
 }
 
-[type='text'],
 button {
     display: inline-block;
-    padding: .5rem 1rem;
+    height: 100%;
     font-size: inherit;
     border-radius: .3rem;
     border: 2px solid lightblue;
-}
-
-button {
     cursor: pointer;
     background-color: lightblue;
     color: white;
-    margin: 0 .5rem;
 }
 
 button:hover {
@@ -65,33 +114,95 @@ h1 {
 }
 
 ul {
+    position: relative;
     padding: 0;
 }
 
-li {
+li{
+    position: relative;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: .5rem;
-    margin-bottom: 1rem;
     background-color: aliceblue;
-    border-radius: .3rem;
     border: 2px solid lightblue;
-    width: 26rem;
-}
-
-[type='text'] {
-    width: 100%;
-}
-
-li span,
-.s {
-    display: inline-block;
+    border-radius: .4rem;
     padding: .5rem;
-    width: 20rem;
-    border-radius: .3rem;
+    width: 30rem;
+    height:fit-content;
 }
 
-li span:hover {
+.first-step-item{
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    align-content: center;
+    padding-right: 2rem;
+    margin-bottom: .5rem;
+}
+
+.todo-list{
+    margin-top: -1rem;
+}
+
+.todo-list-item{
+    margin-bottom: .5rem;
+}
+
+
+
+.delete-button,
+.delete-step-button,
+.proj-delete-button,
+.dropdown-button{
+    position: absolute;  
+    right: 0;
+    outline: 2px solid lightblue;
+}
+
+.dropdown-button{
+    right: 5rem;
+    padding: -1rem;
+}
+
+.delete-step-button{
+    top: 0;
+}
+
+.add-new-step-button{
+    height: auto;
+}
+
+
+.proj-list{
+    margin-top: -1rem;
+}
+
+.proj-list-item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: aliceblue;
+    border-radius: .4rem;
+    font-size: larger;
+    height: fit-content;
+    margin-bottom: 1rem;
+    border: 1px solid lightgreen;
+    width: 31rem;
+}
+
+.step-item {
+    display: inline-block;
+    padding-left: 1rem;
+    padding-right: 15rem;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    border-radius: .4rem;
+    margin: .2rem;
+}
+
+
+li span:not(.project-text):hover {
     background: white;
     border: 2px solid lightblue;
     border-radius: .3rem;
@@ -104,3 +215,79 @@ li span:focus {
     outline: none;
     box-shadow: 5px 5px 5px rgba(2, 2, 2, .25);
 }
+
+.dropdown-div{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding: 0 auto;
+    width: 100%;
+    height: fit-content;
+}
+
+.dropdown-button{
+    margin-left: 2rem;
+    outline: 2px solid lightblue;
+}
+
+.step-list{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: left ; 
+    width: 100%;
+    height: fit-content;
+    padding-right: 2rem;
+    margin-left: -2.5rem;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+}
+
+
+.project-text{
+    padding-right: 1rem;
+    padding-left: 2rem;
+}
+
+.proj-list-item-text,
+.todo-list-item-text,
+.step-item-text,
+.first-step-item-text{
+    font-size: inherit;
+    font-family: inherit;
+    border: 2px solid lightblue;
+    border-radius: .3rem;
+}
+
+/* for color blink on text changes that stem from other elements    NOT YET ADDED*/
+@keyframes blink {
+    0% {
+        background-color: transparent;
+    }
+
+    50% {
+        background-color: yellow;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+.updated {
+    animation: blink 1s linear;
+}
+
+.proj-list-item-text {
+    display: inline-block;
+    font-size: 25px;
+    width: 20rem;
+    padding-top: 1.5rem;
+    }
+
+.arrow{
+    font-size: 30px;
+}
+
+
