@@ -1,6 +1,6 @@
-# Next Project: A GTD-based Project Management Tool
+# NuList: A GTD-based Project Management Tool
 
-Next Project is an intuitive, lightweight project management tool designed to streamline task tracking and project planning. With its dynamic, editable features, it provides an interactive user experience.
+NuList is an intuitive, lightweight project management tool designed to streamline task tracking and project planning. With its dynamic, editable features, it provides an interactive user experience.
 
 ## Features
 
@@ -20,11 +20,11 @@ Please note: This project is fully client-side, and doesn't require a special se
 
 ## Usage
 
-Next Project is designed to supercharge your productivity by utilizing principles from the Getting Things Done (GTD) methodology.
+NuList is designed to supercharge your productivity by utilizing principles from the Getting Things Done (GTD) methodology.
 
 With a focus on breaking down complex projects into manageable, precise steps, this tool effectively transforms your workflow into an actionable docket of tasks. Rather than being overwhelmed by the enormity of a project, users can concentrate on executing individual tasks, leading to efficient project completion.
 
-With Next Project, your projects automatically generate a dynamic "Next Actions" list. This keeps your momentum going and ensures clarity on the task to tackle next.
+With NuList, your projects automatically generate a dynamic "Next Actions" list. This keeps your momentum going and ensures clarity on the task to tackle next.
 
 ## Contributing
 
