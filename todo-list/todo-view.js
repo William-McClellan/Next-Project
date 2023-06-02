@@ -21,7 +21,7 @@ export class TodoView{
         this.todoTextInput.type = 'text';
         this.todoTextInput.placeholder = 'Small + precise = actionable.';
 
-        this.submitTodoButton = createElement('button');
+        this.submitTodoButton = createElement('button', 'submit-todo-button');
         this.submitTodoButton.textContent = 'Add';
         
         this.form.append(this.todoTextInput, this.submitTodoButton );

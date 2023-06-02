@@ -290,4 +290,21 @@ li span:focus {
     font-size: 30px;
 }
 
+@media (max-width: 768px) {
+    #root {
+        flex-direction: column;
+    }
+
+    .todo-div{
+        margin-left: 4rem;
+        margin-top: -15rem;
+    }
+
+    .submit-todo-button,
+    .add-proj-button{
+        height: 3rem;
+    }
+
+    
+}
 
