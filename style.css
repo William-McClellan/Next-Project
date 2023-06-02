@@ -296,8 +296,11 @@ li span:focus {
     }
 
     .todo-div{
-        margin-left: 4rem;
         margin-top: -15rem;
+    }
+
+    .proj-div{
+        padding-left: 0rem;
     }
 
     .submit-todo-button,
@@ -305,6 +308,6 @@ li span:focus {
         height: 3rem;
     }
 
-    
+
 }
 
